@@ -18,33 +18,12 @@ public partial class SpotifyAuth : ContentPage
     string spotifyCode;
 	string spotifyCodeChallenge;
 
-    // Method to open Spotify authentication
-    public async void SpotifyAuth_Clicked(Object sender, EventArgs e)
-    {
-        InitializeComponent();
-        spotifyCode = CodeVerifier();
-        spotifyCodeChallenge = CodeChallenge(spotifyCode);
-
-        var parameters = new Dictionary<string, string>
-        {
-            {"response_type", "code"},
-            {"client_id", client_id},
-            {"scope", scope },
-            {"code_challenge_method", "S256" },
-            {"code_challenge", spotifyCodeChallenge},
-            {"redirect_uri", "LocalToSpotify://callback"}
-        };
-
-
-        var authUrl = QueryHelpers.AddQueryString("https://accounts.spotify.com/authorize", parameters);
-        Uri uri = new Uri("https://accounts.spotify.com/authorize");
-        await Launcher.Default.OpenAsync(uri);
-    }
-
+    // Method to open Spotify authentication Page
     public SpotifyAuth()
 	{
-
-	}
+        // Loads the page with XAML stuff
+        InitializeComponent();
+    }
 
 	// Key
 	private static string CodeVerifier()
@@ -87,24 +66,47 @@ public partial class SpotifyAuth : ContentPage
         return code;
     }
 
-	void AuthorizeSpotifyPage()
+    // Open the authentication page through user's browser
+	void AuthorizeSpotifyPage(object sender, EventArgs e)
 	{
-		
+        // secret stuff to make it safe
+        spotifyCode = CodeVerifier();
+        spotifyCodeChallenge = CodeChallenge(spotifyCode);
 
+        // Creates a dictionary with all the parameters needed to authenticate and login
         var parameters = new Dictionary<string, string>
-            {                
-				{"response_type", "code"},
-                {"client_id", client_id},
-				{"scope", scope },
-				{"code_challenge_method", "S256" },
-                {"code_challenge", spotifyCodeChallenge},
-                {"redirect_uri", "LocalToSpotify://callback"}
-            };
+        {
+            {"response_type", "code"},
+            {"client_id", client_id},
+            {"scope", scope },
+            {"code_challenge_method", "S256" },
+            {"code_challenge", spotifyCodeChallenge},
+            {"redirect_uri", "LocalToSpotify://callback"}
+        };
+
+        // combine the url with the parameters
+        var authUrl = QueryHelpers.AddQueryString("https://accounts.spotify.com/authorize", parameters);
+
+        // create a new uri
+        Uri uri = new Uri(authUrl);
+        Launcher.Default.OpenAsync(uri);
     }
 
+    // Goes back to the main page
     async void BackToPage (object sender, EventArgs e)
 	{
 		await Navigation.PopAsync();
 	}
+
+    // Changes the client id string whenever the entrytext is changed
+    private void spotifyClientIDEntryTextChanged(object sender, TextChangedEventArgs e)
+    {
+        client_id = e.NewTextValue;
+    }
+    async private void LoginToSpotifyButton_Clicked(object sender, EventArgs e)
+    {
+        Console.WriteLine("Clicked on Spotify Login");
+        await Navigation.PushAsync(new SpotifyAuth(), true);
+    }
 
 }

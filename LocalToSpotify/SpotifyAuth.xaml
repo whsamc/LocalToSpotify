@@ -15,5 +15,17 @@
             Text="Login to Spotify"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        
+        <Entry
+                x:Name="spotifyClientIDEntry"
+                Placeholder="Spotify Client ID"
+                Text=""
+                TextChanged="spotifyClientIDEntryTextChanged"/>
+        
+        <Button
+            x:Name="loginToSpotifyButton"
+            Text="Login"
+            Clicked="AuthorizeSpotifyPage"/>
+            
     </VerticalStackLayout>
 </ContentPage>

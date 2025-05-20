@@ -8,6 +8,7 @@ namespace LocalToSpotify
         string fileDirectory { get; set; }
 
         string fileName { get; set; }
+        public static string spotifyClientID { get; set; }
 
         StringBuilder sb = new();
         List<MusicFile> musicList = new();
@@ -47,15 +48,12 @@ namespace LocalToSpotify
             musicAlbumTextCell.Detail = song.Album;
         }
 
-        async void GoToSpotifyPage(System.Object sender, System.EventArgs e)
+        async private void SpotifyAuthPageButton_Clicked(object sender, EventArgs e)
         {
+            Console.WriteLine("Clicked on Spotify Login");
             await Navigation.PushAsync(new SpotifyAuth(), true);
         }
 
-        private void SpotifyAuthPageButton_Clicked(object sender, EventArgs e)
-        {
-
-        }
     }
 
 }
