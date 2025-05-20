@@ -8,7 +8,7 @@ namespace LocalToSpotify
         string fileDirectory { get; set; }
 
         string fileName { get; set; }
-        public static string spotifyClientID { get; set; }
+
 
         StringBuilder sb = new();
         List<MusicFile> musicList = new();
