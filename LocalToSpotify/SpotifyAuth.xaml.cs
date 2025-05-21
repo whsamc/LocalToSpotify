@@ -103,10 +103,11 @@ public partial class SpotifyAuth : ContentPage
     {
         client_id = e.NewTextValue;
     }
+
+    //
     async private void LoginToSpotifyButton_Clicked(object sender, EventArgs e)
     {
         Console.WriteLine("Clicked on Spotify Login");
         await Navigation.PushAsync(new SpotifyAuth(), true);
     }
-
 }

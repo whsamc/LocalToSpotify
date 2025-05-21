@@ -28,14 +28,15 @@
 
             <Entry
                 x:Name="musicFileInput"
-                Placeholder="File path"
-                Text=""/>
+                Placeholder="File Directory path"
+                Text=""
+                TextChanged="ReadFileDirectoryPath"/>
 
             <Button
                 x:Name="ScanBtn"
                 Text="Scan" 
-                SemanticProperties.Hint="Scan the music file for its metadata"
-                Clicked="OnScanClicked"
+                SemanticProperties.Hint="Scan the music folder for its metadata"
+                Clicked="ReadThroughFiles"
                 HorizontalOptions="Center"
                 WidthRequest="150"
                 FontSize="24"/>
