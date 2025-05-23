@@ -16,6 +16,9 @@ namespace LocalToSpotify
         // Get the music file paths for the folder
         private void ReadThroughFiles(object sender, EventArgs e)
         {
+            // Return if fileDirectory is null
+            if(fileDirectory == null) return;
+
             // trim quotation marks
             fileDirectory = fileDirectory.Trim('"');
 
@@ -66,9 +69,9 @@ namespace LocalToSpotify
             var song = ReadMusicFile(filePath);
 
             // Display song information
-            musicTitleTextCell.Detail = song.Title;
-            musicArtistTextCell.Detail = song.Artist;
-            musicAlbumTextCell.Detail = song.Album;
+            musicTitleTextCell.Text = song.Title;
+            musicArtistTextCell.Text = song.Artist;
+            musicAlbumTextCell.Text = song.Album;
         }
 
         // Switch pages to the Spotify Authentication page

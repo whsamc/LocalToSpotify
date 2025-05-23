@@ -7,13 +7,14 @@
         <VerticalStackLayout            
             Padding="30,0"
             Spacing="25">
-            <Button
+            <ImageButton
+                Source="settings_cog.png"
                 x:Name="SpotifyAuthPageButton"
-                Text="Login to Spotify"
                 Clicked="SpotifyAuthPageButton_Clicked"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-            />
+                HorizontalOptions="End"
+                Background="Transparent"
+                MaximumHeightRequest="50"
+                />
 
             <Image
                 Source="dotnet_bot.png"
@@ -28,7 +29,8 @@
 
             <Entry
                 x:Name="musicFileInput"
-                Placeholder="File Directory path"
+                MaximumWidthRequest="750"
+                Placeholder="e.g. C:\Users\name\folder"
                 Text=""
                 TextChanged="ReadFileDirectoryPath"/>
 
@@ -39,24 +41,58 @@
                 Clicked="ReadThroughFiles"
                 HorizontalOptions="Center"
                 WidthRequest="150"
+                FontFamily="Helvetica"
+                FontAttributes="Bold"
                 FontSize="24"/>
 
-            <TableView>
-                <TableRoot>
-                    <TableSection Title="Music Information" >
-                        <TextCell x:Name="musicTitleTextCell"
-                                  Text="Title"
-                                  Detail=""/>
-                        <TextCell x:Name="musicArtistTextCell"
-                                  Text="Artist"
-                                  Detail=""/>
-                        <TextCell x:Name="musicAlbumTextCell"
-                                  Text="Album"
-                                  Detail=""/>
-                    </TableSection>
-                </TableRoot>
-            </TableView>
+            <Grid Margin="20,20,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Text="Song Information"
+                       FontFamily="Helvetica"
+                       FontSize="Medium"
+                       FontAttributes="Bold"/>
+                <Grid Grid.Row ="1"
+                      Grid.Column="1"
+                      Margin="10,10,0,5">
+                    <Label x:Name="musicTitleTextCell123"
+                           Text="Title"
+                           FontAttributes="Bold"/>
+                    <Label x:Name="musicTitleTextCell"
+                           Text=""
+                           FontAttributes="Bold"/>
+                </Grid>
+                <Grid Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="10,5,10,5">
+                    <Label x:Name="musicArtistTextCell123"
+                           Text="Artist"
+                           FontAttributes="Bold"/>
+                    <Label x:Name="musicArtistTextCell"
+                           Text=""/>
+                </Grid>
+                <Grid Grid.Row="3"
+                      Grid.Column="1"
+                      Margin="10,5,10,5">
+                    <Label x:Name="musicAlbumTextCell123"
+                           Text="Album"
+                           FontAttributes="Bold"/>
+                    <Label x:Name="musicAlbumTextCell"
+                           Text=""/>
+                </Grid>
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

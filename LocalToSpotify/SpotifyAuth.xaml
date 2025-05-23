@@ -21,11 +21,12 @@
                 Placeholder="Spotify Client ID"
                 Text=""
                 TextChanged="spotifyClientIDEntryTextChanged"/>
-        
+
         <Button
             x:Name="loginToSpotifyButton"
             Text="Login"
             Clicked="AuthorizeSpotifyPage"/>
-            
+        
     </VerticalStackLayout>
+    
 </ContentPage>
