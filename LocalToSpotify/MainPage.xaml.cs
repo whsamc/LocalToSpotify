@@ -12,6 +12,12 @@ namespace LocalToSpotify
         StringBuilder sb = new();
         List<MusicFile> musicList = new();
         List<string> fileList = new();
+        public MainPage()
+        {
+            InitializeComponent();
+
+
+        }
 
         // Get the music file paths for the folder
         private void ReadThroughFiles(object sender, EventArgs e)
@@ -22,8 +28,20 @@ namespace LocalToSpotify
             // trim quotation marks
             fileDirectory = fileDirectory.Trim('"');
 
-            // get file paths for all music files inside folder
-            var musicFilePathList = Directory.GetFiles(fileDirectory, "*", SearchOption.AllDirectories);
+            List<string> musicFilePathList = new List<string>();
+
+            // If the path is actually just a file
+            if (System.IO.File.Exists(fileDirectory))
+            {
+                // Add single item to the list because of the parse method later
+                musicFilePathList.Add(fileDirectory);
+            }
+            // If the path is a directory
+            else
+            {
+                // get file paths for all music files inside folder
+                musicFilePathList = Directory.GetFiles(fileDirectory, "*", SearchOption.AllDirectories).ToList();
+            }
 
             // Iterate through list and parse metadata from each filepath
             foreach(var musicFilePath in musicFilePathList)
@@ -50,16 +68,11 @@ namespace LocalToSpotify
                 return thisSong;
             }
 
-            // Catch errors
+            // Catch wrong format exceptions
             catch(UnsupportedFormatException e)
             {
                 return new MusicFile("", "", "");
             }
-        }
-
-        public MainPage()
-        {
-            InitializeComponent();
         }
 
         // Parse the music file for the metadata

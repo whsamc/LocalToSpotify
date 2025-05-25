@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LocalToSpotify
 {
-    class MusicFile
+    // This inheritance allows this class to data bind
+    class MusicFile : BindableObject
     {
         public string Title { get; set; }
         public string Artist { get; set; }

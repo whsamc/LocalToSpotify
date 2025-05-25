@@ -2,9 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LocalToSpotify.MainPage">
-
+    
     <ScrollView>
-        <VerticalStackLayout            
+        <StackLayout            
             Padding="30,0"
             Spacing="25">
             <ImageButton
@@ -44,7 +44,6 @@
                 FontFamily="Helvetica"
                 FontAttributes="Bold"
                 FontSize="24"/>
-
             <Grid Margin="20,20,20,20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -71,8 +70,8 @@
                            Text="Title"
                            FontAttributes="Bold"/>
                     <Label x:Name="musicTitleTextCell"
-                           Text=""
-                           FontAttributes="Bold"/>
+                           Text="Testing"
+                           Margin="50,0"/>
                 </Grid>
                 <Grid Grid.Row="2"
                       Grid.Column="1"
@@ -81,7 +80,8 @@
                            Text="Artist"
                            FontAttributes="Bold"/>
                     <Label x:Name="musicArtistTextCell"
-                           Text=""/>
+                           Text="Testing"
+                           Margin="50,0"/>
                 </Grid>
                 <Grid Grid.Row="3"
                       Grid.Column="1"
@@ -90,9 +90,11 @@
                            Text="Album"
                            FontAttributes="Bold"/>
                     <Label x:Name="musicAlbumTextCell"
-                           Text=""/>
+                           Text="Testing"
+                           Margin="50,0"/>
                 </Grid>
             </Grid>
-        </VerticalStackLayout>
+            
+        </StackLayout>
     </ScrollView>
 </ContentPage>
