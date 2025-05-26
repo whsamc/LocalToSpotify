@@ -7,16 +7,12 @@ namespace LocalToSpotify
     {
         string fileDirectory { get; set; }
 
-        string fileName { get; set; }
+        List<MusicFile> musicList = new List<MusicFile>();
 
-        StringBuilder sb = new();
-        List<MusicFile> musicList = new();
-        List<string> fileList = new();
+        List<string> musicFilePathList = new List<string>();
         public MainPage()
         {
             InitializeComponent();
-
-
         }
 
         // Get the music file paths for the folder
@@ -27,8 +23,6 @@ namespace LocalToSpotify
 
             // trim quotation marks
             fileDirectory = fileDirectory.Trim('"');
-
-            List<string> musicFilePathList = new List<string>();
 
             // If the path is actually just a file
             if (System.IO.File.Exists(fileDirectory))
@@ -46,12 +40,15 @@ namespace LocalToSpotify
             // Iterate through list and parse metadata from each filepath
             foreach(var musicFilePath in musicFilePathList)
             {
-                ParseMetadata(musicFilePath);
+                AddToMusicList(ParseMusicFile(musicFilePath));
             }
+
+            // Make a collection to be able to display in CollectionView
+            MusicDirectory musicCollection = new MusicDirectory(musicList.ToArray());
         }
 
         // Parse the metadata for the music file
-        MusicFile ReadMusicFile(string filePath)
+        private MusicFile ParseMusicFile(string filePath)
         {
             // trim the string of quotation marks
             var path = filePath.Trim('"');
@@ -63,28 +60,19 @@ namespace LocalToSpotify
                 var file = TagLib.File.Create(@path);
 
                 // Create musicfile object
-                MusicFile thisSong = new MusicFile(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album);
-
-                return thisSong;
+                return new MusicFile(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath);
             }
 
             // Catch wrong format exceptions
             catch(UnsupportedFormatException e)
             {
-                return new MusicFile("", "", "");
+                return new MusicFile("", "", "", filePath);
             }
         }
 
-        // Parse the music file for the metadata
-        private void ParseMetadata(string filePath)
+        private void AddToMusicList(MusicFile song)
         {
-            // Run the function to read music file metadata and assign
-            var song = ReadMusicFile(filePath);
-
-            // Display song information
-            musicTitleTextCell.Text = song.Title;
-            musicArtistTextCell.Text = song.Artist;
-            musicAlbumTextCell.Text = song.Album;
+            musicList.Add(song);
         }
 
         // Switch pages to the Spotify Authentication page
