@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LocalToSpotify.MainPage">
-    <ScrollView>
+
+    <ScrollView x:Name="songsScrollView">
         <StackLayout            
             Padding="30,0"
             Spacing="25">
@@ -14,6 +15,7 @@
                 Background="Transparent"
                 MaximumHeightRequest="50"
                 />
+
 
             <Image
                 Source="dotnet_bot.png"
@@ -98,12 +100,27 @@
     </ScrollView>
 
     <!--#region WIP -->
-    <!-- <CollectionView>
-        <CollectionView.ItemsSource>
-            <x:List Type="{x:Type x:MusicFile}">
+    <!--
+    <CollectionView x:Name="songsCollectionView" ItemsLayout="VerticalList">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <VerticalStackLayout>
+                    <Frame Margin="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height=".2*"/>
+                                <RowDefinition Height=".8*"/>
+                            </Grid.RowDefinitions>
 
-            </x:List>
-        </CollectionView.ItemsSource>
-    </CollectionView> -->
+                            <Label Text="{Binding Title}"/>
+                            <Label Text="Testing"/>
+                        </Grid>
+                    </Frame>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+    -->
     <!--#endregion-->
+    
 </ContentPage>

@@ -10,9 +10,13 @@ namespace LocalToSpotify
         List<MusicFile> musicList = new List<MusicFile>();
 
         List<string> musicFilePathList = new List<string>();
+
         public MainPage()
         {
             InitializeComponent();
+
+            // Bind the collectionview(target) to musicList(source)
+            songsScrollView.BindingContext = musicList;
         }
 
         // Get the music file paths for the folder
