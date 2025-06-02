@@ -7,7 +7,7 @@ namespace LocalToSpotify
     {
         string fileDirectory { get; set; }
 
-        List<MusicFile> musicList = new List<MusicFile>();
+        public static List<MusicFile> musicList = new List<MusicFile>();
 
         List<string> musicFilePathList = new List<string>();
 
@@ -24,6 +24,9 @@ namespace LocalToSpotify
         {
             // Return if fileDirectory is null
             if(fileDirectory == null) return;
+
+            musicFilePathList.Clear();
+            musicList.Clear();
 
             // trim quotation marks
             fileDirectory = fileDirectory.Trim('"');
@@ -46,9 +49,6 @@ namespace LocalToSpotify
             {
                 AddToMusicList(ParseMusicFile(musicFilePath));
             }
-
-            // Make a collection to be able to display in CollectionView
-            MusicDirectory musicCollection = new MusicDirectory(musicList.ToArray());
         }
 
         // Parse the metadata for the music file
