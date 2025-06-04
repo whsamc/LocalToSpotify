@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LocalToSpotify.MainPage">
-
     <ScrollView>
-        <VerticalStackLayout            
+        <StackLayout            
             Padding="30,0"
             Spacing="25">
+            <!-- Static Elements -->
             <ImageButton
                 Source="settings_cog.png"
                 x:Name="SpotifyAuthPageButton"
@@ -45,54 +45,56 @@
                 FontAttributes="Bold"
                 FontSize="24"/>
 
-            <Grid Margin="20,20,20,20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0"
-                       Grid.Column="1"
-                       Text="Song Information"
-                       FontFamily="Helvetica"
-                       FontSize="Medium"
-                       FontAttributes="Bold"/>
-                <Grid Grid.Row ="1"
-                      Grid.Column="1"
-                      Margin="10,10,0,5">
-                    <Label x:Name="musicTitleTextCell123"
-                           Text="Title"
-                           FontAttributes="Bold"/>
-                    <Label x:Name="musicTitleTextCell"
-                           Text=""
-                           FontAttributes="Bold"/>
-                </Grid>
-                <Grid Grid.Row="2"
-                      Grid.Column="1"
-                      Margin="10,5,10,5">
-                    <Label x:Name="musicArtistTextCell123"
-                           Text="Artist"
-                           FontAttributes="Bold"/>
-                    <Label x:Name="musicArtistTextCell"
-                           Text=""/>
-                </Grid>
-                <Grid Grid.Row="3"
-                      Grid.Column="1"
-                      Margin="10,5,10,5">
-                    <Label x:Name="musicAlbumTextCell123"
-                           Text="Album"
-                           FontAttributes="Bold"/>
-                    <Label x:Name="musicAlbumTextCell"
-                           Text=""/>
-                </Grid>
-            </Grid>
-        </VerticalStackLayout>
+            <!-- Dynamic List -->
+            <CollectionView ItemsSource="{Binding MusicList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Grid Margin="20,20,20,20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Row ="0"
+                                      Grid.Column="1"
+                                      Margin="10,10,0,5">
+                                    <Label Text="Title"
+                                           FontAttributes="Bold"/>
+                                    <Label Text="{Binding Title}"
+                                           Margin="50,0"/>
+                                </Grid>
+                                <Grid Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="10,5,10,5">
+                                    <Label Text="Artist"
+                                           FontAttributes="Bold"/>
+                                    <Label Text="{Binding Artist}"
+                                           Margin="50,0"/>
+                                </Grid>
+                                <Grid Grid.Row="2"
+                                      Grid.Column="1"
+                                      Margin="10,5,10,5">
+                                    <Label Text="Album"
+                                           FontAttributes="Bold"/>
+                                    <Label Text="{Binding Album}"
+                                           Margin="50,0"/>
+                                </Grid>
+                            </Grid>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="Bottom: Testing"
+                   HorizontalOptions="Center"/>
+
+        </StackLayout>
     </ScrollView>
 </ContentPage>
