@@ -1,53 +1,73 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Text;
+using System.IO;
 using TagLib;
 
 namespace LocalToSpotify
 {
     public partial class MainPage : ContentPage
     {
-        string fileDirectory { get; set; }
+        string? FileDirectory;
 
-        public static List<MusicFile> musicList = new List<MusicFile>();
+        // ObservableCollection needs to be a property to properly data bind
+        public ObservableCollection<MusicFile> MusicList { get; set; } = new ObservableCollection<MusicFile>();
 
-        List<string> musicFilePathList = new List<string>();
+        private List<string> MusicFilePathList = new List<string>();
+
+        private HashSet<string> fileExtensions = new HashSet<string>()
+        {
+            ".mp3",
+            ".wav",
+            ".flac",
+            ".opus",
+            ".m4a",
+            ".wma",
+            ".aac"
+        };
 
         public MainPage()
         {
             InitializeComponent();
 
-            // Bind the collectionview(target) to musicList(source)
-            songsScrollView.BindingContext = musicList;
+            BindingContext = this;
+
+            Debug.WriteLine("Testing");
         }
 
         // Get the music file paths for the folder
         private void ReadThroughFiles(object sender, EventArgs e)
         {
-            // Return if fileDirectory is null
-            if(fileDirectory == null) return;
+            // Return if FileDirectory is null
+            if(FileDirectory == null) return;
 
-            musicFilePathList.Clear();
-            musicList.Clear();
+            MusicFilePathList.Clear();
+            MusicList.Clear();
 
             // trim quotation marks
-            fileDirectory = fileDirectory.Trim('"');
+            FileDirectory = FileDirectory.Trim('"');
 
             // If the path is actually just a file
-            if (System.IO.File.Exists(fileDirectory))
+            if (System.IO.File.Exists(FileDirectory))
             {
                 // Add single item to the list because of the parse method later
-                musicFilePathList.Add(fileDirectory);
+                MusicFilePathList.Add(FileDirectory);
             }
             // If the path is a directory
             else
             {
                 // get file paths for all music files inside folder
-                musicFilePathList = Directory.GetFiles(fileDirectory, "*", SearchOption.AllDirectories).ToList();
+                MusicFilePathList = Directory.GetFiles(FileDirectory, "*", SearchOption.AllDirectories).ToList();
             }
 
             // Iterate through list and parse metadata from each filepath
-            foreach(var musicFilePath in musicFilePathList)
+            foreach(var MusicFilePath in MusicFilePathList)
             {
-                AddToMusicList(ParseMusicFile(musicFilePath));
+                // Check the file type with fileExtensions hashset
+                if(fileExtensions.Contains(Path.GetExtension(MusicFilePath)))
+                {
+                    AddToMusicList(ParseMusicFile(MusicFilePath));
+                }
             }
         }
 
@@ -76,7 +96,7 @@ namespace LocalToSpotify
 
         private void AddToMusicList(MusicFile song)
         {
-            musicList.Add(song);
+            MusicList.Add(song);
         }
 
         // Switch pages to the Spotify Authentication page
@@ -86,11 +106,11 @@ namespace LocalToSpotify
             await Navigation.PushAsync(new SpotifyAuth(), true);
         }
 
-        // Set the filedirectory string whenever the entry text box is changed
+        // Set the FileDirectory string whenever the entry text box is changed
         private void ReadFileDirectoryPath(object sender, TextChangedEventArgs e)
         {
             // Assign new text to string
-            fileDirectory = e.NewTextValue;
+            FileDirectory = e.NewTextValue;
         }
     }
 }
