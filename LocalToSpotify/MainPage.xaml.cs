@@ -1,57 +1,78 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Text;
+using System.IO;
 using TagLib;
 
 namespace LocalToSpotify
 {
     public partial class MainPage : ContentPage
     {
-        string fileDirectory { get; set; }
+        string? FileDirectory;
 
-        string fileName { get; set; }
+        // ObservableCollection needs to be a property to properly data bind
+        public ObservableCollection<MusicFile> MusicList { get; set; } = new ObservableCollection<MusicFile>();
 
-        StringBuilder sb = new();
-        List<MusicFile> musicList = new();
-        List<string> fileList = new();
+        private List<string> MusicFilePathList = new List<string>();
+
+        private HashSet<string> fileExtensions = new HashSet<string>()
+        {
+            ".mp3",
+            ".wav",
+            ".flac",
+            ".opus",
+            ".m4a",
+            ".wma",
+            ".aac"
+        };
+
         public MainPage()
         {
             InitializeComponent();
 
+            BindingContext = this;
 
+            Debug.WriteLine("Testing");
         }
 
         // Get the music file paths for the folder
         private void ReadThroughFiles(object sender, EventArgs e)
         {
-            // Return if fileDirectory is null
-            if(fileDirectory == null) return;
+            // Return if FileDirectory is null
+            if(FileDirectory == null) return;
+
+            MusicFilePathList.Clear();
+            MusicList.Clear();
 
             // trim quotation marks
-            fileDirectory = fileDirectory.Trim('"');
-
-            List<string> musicFilePathList = new List<string>();
+            FileDirectory = FileDirectory.Trim('"');
 
             // If the path is actually just a file
-            if (System.IO.File.Exists(fileDirectory))
+            if (System.IO.File.Exists(FileDirectory))
             {
                 // Add single item to the list because of the parse method later
-                musicFilePathList.Add(fileDirectory);
+                MusicFilePathList.Add(FileDirectory);
             }
             // If the path is a directory
             else
             {
                 // get file paths for all music files inside folder
-                musicFilePathList = Directory.GetFiles(fileDirectory, "*", SearchOption.AllDirectories).ToList();
+                MusicFilePathList = Directory.GetFiles(FileDirectory, "*", SearchOption.AllDirectories).ToList();
             }
 
             // Iterate through list and parse metadata from each filepath
-            foreach(var musicFilePath in musicFilePathList)
+            foreach(var MusicFilePath in MusicFilePathList)
             {
-                ParseMetadata(musicFilePath);
+                // Check the file type with fileExtensions hashset
+                if(fileExtensions.Contains(Path.GetExtension(MusicFilePath)))
+                {
+                    AddToMusicList(ParseMusicFile(MusicFilePath));
+                }
             }
         }
 
         // Parse the metadata for the music file
-        MusicFile ReadMusicFile(string filePath)
+        private MusicFile ParseMusicFile(string filePath)
         {
             // trim the string of quotation marks
             var path = filePath.Trim('"');
@@ -63,28 +84,19 @@ namespace LocalToSpotify
                 var file = TagLib.File.Create(@path);
 
                 // Create musicfile object
-                MusicFile thisSong = new MusicFile(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album);
-
-                return thisSong;
+                return new MusicFile(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath);
             }
 
             // Catch wrong format exceptions
             catch(UnsupportedFormatException e)
             {
-                return new MusicFile("", "", "");
+                return new MusicFile("", "", "", filePath);
             }
         }
 
-        // Parse the music file for the metadata
-        private void ParseMetadata(string filePath)
+        private void AddToMusicList(MusicFile song)
         {
-            // Run the function to read music file metadata and assign
-            var song = ReadMusicFile(filePath);
-
-            // Display song information
-            musicTitleTextCell.Text = song.Title;
-            musicArtistTextCell.Text = song.Artist;
-            musicAlbumTextCell.Text = song.Album;
+            MusicList.Add(song);
         }
 
         // Switch pages to the Spotify Authentication page
@@ -94,11 +106,11 @@ namespace LocalToSpotify
             await Navigation.PushAsync(new SpotifyAuth(), true);
         }
 
-        // Set the filedirectory string whenever the entry text box is changed
+        // Set the FileDirectory string whenever the entry text box is changed
         private void ReadFileDirectoryPath(object sender, TextChangedEventArgs e)
         {
             // Assign new text to string
-            fileDirectory = e.NewTextValue;
+            FileDirectory = e.NewTextValue;
         }
     }
 }

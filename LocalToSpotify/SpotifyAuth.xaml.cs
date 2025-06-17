@@ -125,7 +125,7 @@ public partial class SpotifyAuth : ContentPage
         client_id = e.NewTextValue;
     }
 
-    //
+    // Open spotify auth page
     async private void LoginToSpotifyButton_Clicked(object sender, EventArgs e)
     {
         Console.WriteLine("Clicked on Spotify Login");
