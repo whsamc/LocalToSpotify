@@ -2,11 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LocalToSpotify.MainPage">
-    
     <ScrollView>
         <StackLayout            
             Padding="30,0"
             Spacing="25">
+
+            
+
+            <!-- Static Elements -->
             <ImageButton
                 Source="settings_cog.png"
                 x:Name="SpotifyAuthPageButton"

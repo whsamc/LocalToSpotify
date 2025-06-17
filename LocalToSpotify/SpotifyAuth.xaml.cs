@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace LocalToSpotify;
 
@@ -67,7 +69,7 @@ public partial class SpotifyAuth : ContentPage
     }
 
     // Open the authentication page through user's browser
-	void AuthorizeSpotifyPage(object sender, EventArgs e)
+	async void AuthorizeSpotifyPage(object sender, EventArgs e)
 	{
         // secret stuff to make it safe
         spotifyCode = CodeVerifier();
@@ -89,7 +91,26 @@ public partial class SpotifyAuth : ContentPage
 
         // create a new uri
         Uri uri = new Uri(authUrl);
-        Launcher.Default.OpenAsync(uri);
+        await Launcher.Default.OpenAsync(uri);
+
+        var authResult = await WebAuthenticator.AuthenticateAsync(
+            new Uri(authUrl),
+            new Uri("LocalToSpotify://callback"));
+
+        // This shit dont work, but maybe it will later
+        // https://github.com/microsoft/WindowsAppSDK/issues/441
+        /*
+        try
+        {
+            WebAuthenticatorResult authResult = await WebAuthenticator.Default.AuthenticateAsync(
+                new Uri(authUrl),
+                new Uri("LocalToSpotify://callback"));
+        }
+        catch(TaskCanceledException eh)
+        {
+            // whoops
+        }
+        */
     }
 
     // Goes back to the main page
@@ -109,5 +130,23 @@ public partial class SpotifyAuth : ContentPage
     {
         Console.WriteLine("Clicked on Spotify Login");
         await Navigation.PushAsync(new SpotifyAuth(), true);
+    }
+
+
+    // Needed to get responses from authenticating Spotify Login via browser
+    public class RestService
+    {
+        HttpClient _client;
+        JsonSerializerOptions _serializerOptions;
+
+        public RestService()
+        {
+            _client = new HttpClient();
+            _serializerOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+        }
     }
 }
