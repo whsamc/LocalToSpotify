@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.WebUtilities;
 using System;
+using System.Diagnostics;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -12,19 +14,19 @@ public partial class SpotifyAuth : ContentPage
 {
 	//
 	string client_id = "CLIENT_ID";
-	string redirect_uri = "LocalToSpotify://callback";
+	string redirect_uri = "http://localhost:5000/callback";
 	string scope = "user-read-private playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read ugc-image-upload";
 	Uri authURI = new Uri("https://accounts.spotify.com/authorize");
 
 	// 
     string spotifyCode;
-	string spotifyCodeChallenge;
+    string spotifyCodeChallenge;
 
     // Method to open Spotify authentication Page
     public SpotifyAuth()
 	{
         // Loads the page with XAML stuff
-        InitializeComponent();
+        InitializeComponent();;
     }
 
 	// Key
@@ -83,7 +85,7 @@ public partial class SpotifyAuth : ContentPage
             {"scope", scope },
             {"code_challenge_method", "S256" },
             {"code_challenge", spotifyCodeChallenge},
-            {"redirect_uri", "LocalToSpotify://callback"}
+            {"redirect_uri", "http://localhost:5000/callback"}
         };
 
         // combine the url with the parameters
@@ -91,11 +93,8 @@ public partial class SpotifyAuth : ContentPage
 
         // create a new uri
         Uri uri = new Uri(authUrl);
+        // Simple browser open
         await Launcher.Default.OpenAsync(uri);
-
-        var authResult = await WebAuthenticator.AuthenticateAsync(
-            new Uri(authUrl),
-            new Uri("LocalToSpotify://callback"));
 
         // This shit dont work, but maybe it will later
         // https://github.com/microsoft/WindowsAppSDK/issues/441
@@ -112,6 +111,7 @@ public partial class SpotifyAuth : ContentPage
         }
         */
     }
+
 
     // Goes back to the main page
     async void BackToPage (object sender, EventArgs e)
@@ -130,23 +130,5 @@ public partial class SpotifyAuth : ContentPage
     {
         Console.WriteLine("Clicked on Spotify Login");
         await Navigation.PushAsync(new SpotifyAuth(), true);
-    }
-
-
-    // Needed to get responses from authenticating Spotify Login via browser
-    public class RestService
-    {
-        HttpClient _client;
-        JsonSerializerOptions _serializerOptions;
-
-        public RestService()
-        {
-            _client = new HttpClient();
-            _serializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
-        }
     }
 }
