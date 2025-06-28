@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LocalToSpotify.SpotifyAuth"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LocalToSpotify"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Button
+            x:Name="HomePageButton"
+            Text="Back"
+            Click="BackToPage"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"/>
+
+        <TextBlock 
+            Text="Login to Spotify"
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center" />
+
+        <TextBox
+            x:Name="spotifyClientIDEntry"
+            PlaceholderText="Spotify Client ID"
+            Text=""
+            TextChanged="spotifyClientIDEntryTextChanged"/>
+
+        <Button
+            x:Name="loginToSpotifyButton"
+            Text="Login"
+            Click="AuthorizeSpotifyPage"/>
+    </Grid>
+    
+</Page>

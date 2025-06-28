@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LocalToSpotify (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LocalToSpotify (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
