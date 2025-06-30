@@ -9,9 +9,9 @@
     mc:Ignorable="d">
 
     <Grid>
+        
         <Button
             x:Name="HomePageButton"
-            Text="Back"
             Click="BackToPage"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"/>
@@ -29,7 +29,6 @@
 
         <Button
             x:Name="loginToSpotifyButton"
-            Text="Login"
             Click="AuthorizeSpotifyPage"/>
     </Grid>
     

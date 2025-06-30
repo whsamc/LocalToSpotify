@@ -1,4 +1,5 @@
 using Microsoft.Security.Authentication.OAuth;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -6,6 +7,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Windowing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -90,18 +92,15 @@ namespace LocalToSpotify
 
             // Creates a dictionary with all the parameters needed to authenticate and login
             var parameters = new Dictionary<string, string>
-        {
-            {"response_type", "code"},
-            {"client_id", client_id},
-            {"scope", scope },
-            {"code_challenge_method", "S256" },
-            {"code_challenge", spotifyCodeChallenge},
-            {"redirect_uri", redirect_uri}
-        };
-
-            // Get the WindowId for the application window
-            Microsoft.UI.WindowId parentWindowId = this.AppWindow.Id;
-
+            {
+                {"response_type", "code"},
+                {"client_id", client_id},
+                {"scope", scope },
+                {"code_challenge_method", "S256" },
+                {"code_challenge", spotifyCodeChallenge},
+                {"redirect_uri", redirect_uri}
+            };
+            
             // Setting up to get authorization code by combining url with parameters
             AuthRequestParams authRequestParams = AuthRequestParams.CreateForAuthorizationCodeRequest(client_id, new Uri(redirect_uri));
 
@@ -110,26 +109,20 @@ namespace LocalToSpotify
             authRequestParams.CodeChallengeMethod = CodeChallengeMethodKind.S256;
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
 
+            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow, new Uri(authUriString), authRequestParams);
         }
 
 
         // Goes back to the main page
-        async void BackToPage(object sender, EventArgs e)
+        private void BackToPage(object sender, RoutedEventArgs e)
         {
-            await Navigation.PopAsync();
+            Frame.Navigate(typeof(MainWindow));
         }
 
         // Changes the client id string whenever the entrytext is changed
         private void spotifyClientIDEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             client_id = e.NewTextValue;
-        }
-
-        // Open spotify auth page
-        async private void LoginToSpotifyButton_Clicked(object sender, EventArgs e)
-        {
-            Console.WriteLine("Clicked on Spotify Login");
-            await Navigation.PushAsync(new SpotifyAuth(), true);
         }
     }
 }
