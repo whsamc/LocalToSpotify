@@ -20,13 +20,14 @@
             Spacing="25">
 
                 <!-- Static Elements -->
-                <Image Source="settings_cog.png">
+                <Image Source="settings_cog.png"/>
+                
                     <Button
-                    x:Name="SpotifyAuthPageButton"
-                    Clicked="SpotifyAuthPageButton_Clicked"
-                    HorizontalOptions="End"
-                    Background="Transparent"
-                    MaximumHeightRequest="50"
+                x:Name="SpotifyAuthPageButton"
+                Click="SpotifyAuthPageButton_Clicked"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                MaxHeight="50"
                     />
 
                     <TextBlock

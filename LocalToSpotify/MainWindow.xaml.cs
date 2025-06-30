@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Windowing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using TagLib;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,9 +27,12 @@ namespace LocalToSpotify
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public static AppWindow MyAppWindow;
+
         public MainWindow()
         {
             InitializeComponent();
+            MyAppWindow = this.AppWindow;
         }
 
         string? FileDirectory;
@@ -113,10 +118,9 @@ namespace LocalToSpotify
         }
 
         // Switch pages to the Spotify Authentication page
-        async private void SpotifyAuthPageButton_Clicked(object sender, EventArgs e)
+        private void SpotifyAuthPageButton_Clicked(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Clicked on Spotify Login");
-            await Navigation.PushAsync(new SpotifyAuth(), true);
+            
         }
 
         // Set the FileDirectory string whenever the entry text box is changed
