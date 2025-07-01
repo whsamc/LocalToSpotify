@@ -7,7 +7,7 @@ using TagLib;
 
 namespace LocalToSpotify
 {
-    internal class MusicFile
+    public class MusicFile
     {
         public string Title { get; }
         public string Artist { get; }
