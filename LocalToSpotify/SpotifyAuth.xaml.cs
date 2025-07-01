@@ -109,7 +109,7 @@ namespace LocalToSpotify
             authRequestParams.CodeChallengeMethod = CodeChallengeMethodKind.S256;
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
 
-            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow, new Uri(authUriString), authRequestParams);
+            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
         }
 
 
@@ -122,7 +122,7 @@ namespace LocalToSpotify
         // Changes the client id string whenever the entrytext is changed
         private void spotifyClientIDEntryTextChanged(object sender, TextChangedEventArgs e)
         {
-            client_id = e.NewTextValue;
+            client_id = spotifyClientIDEntry.Text;
         }
     }
 }
