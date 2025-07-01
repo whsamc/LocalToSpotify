@@ -28,14 +28,13 @@ namespace LocalToSpotify
     public sealed partial class MainWindow : Window
     {
         public static AppWindow MyAppWindow;
+        string? FileDirectory;
 
         public MainWindow()
         {
             InitializeComponent();
             MyAppWindow = this.AppWindow;
         }
-
-        string? FileDirectory;
 
         // ObservableCollection needs to be a property to properly data bind
         public ObservableCollection<MusicFile> MusicList { get; set; } = new ObservableCollection<MusicFile>();
@@ -126,8 +125,7 @@ namespace LocalToSpotify
         // Set the FileDirectory string whenever the entry text box is changed
         private void ReadFileDirectoryPath(object sender, TextChangedEventArgs e)
         {
-            // Assign new text to string
-            FileDirectory = e.NewTextValue;
+            FileDirectory = musicFileInput.Text;
         }
     }
 }
