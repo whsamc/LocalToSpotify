@@ -22,18 +22,19 @@ using TagLib;
 
 namespace LocalToSpotify
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    // Need to move methods from here to mainpage
     public sealed partial class MainWindow : Window
     {
-        public static AppWindow MyAppWindow;
+        public static MainWindow Current;
+        public static AppWindow? MyAppWindow;
         string? FileDirectory;
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            Current = this;
             MyAppWindow = this.AppWindow;
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         }
 
         // ObservableCollection needs to be a property to properly data bind
@@ -53,7 +54,7 @@ namespace LocalToSpotify
         };
 
         // Get the music file paths for the folder
-        private void ReadThroughFiles(object sender, EventArgs e)
+        private void ReadThroughFiles(object sender, RoutedEventArgs e)
         {
             // Return if FileDirectory is null
             if (FileDirectory == null) return;

@@ -39,7 +39,7 @@ namespace LocalToSpotify
 
         public SpotifyAuth()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         // Key
@@ -84,7 +84,7 @@ namespace LocalToSpotify
         }
 
         // Open the authentication page through user's browser
-        async void AuthorizeSpotifyPage(object sender, EventArgs e)
+        async void AuthorizeSpotifyPage(object sender, RoutedEventArgs e)
         {
             // secret stuff to make it safe
             spotifyCode = CodeVerifier();
