@@ -13,6 +13,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="MainPage.xaml" />
     <None Remove="SpotifyAuth.xaml" />
   </ItemGroup>
 
@@ -42,6 +43,11 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="SpotifyAuth.xaml">
