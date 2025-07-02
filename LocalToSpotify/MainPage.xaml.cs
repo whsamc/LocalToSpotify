@@ -22,11 +22,15 @@ namespace LocalToSpotify
 {
     public sealed partial class MainPage : Page
     {
+
+        public static MainPage Current;
         string? FileDirectory;
 
         public MainPage()
         {
             this.InitializeComponent();
+            Current = this;
+
         }
 
         // ObservableCollection needs to be a property to properly data bind
