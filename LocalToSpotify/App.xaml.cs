@@ -28,7 +28,7 @@ namespace LocalToSpotify
     public partial class App : Application
     {
         private Window? _window;
-
+        private IntPtr _windowHandle;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -46,18 +46,8 @@ namespace LocalToSpotify
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             _window = new MainWindow();
-
-            // Create a Frame to act as the navigation context.
-            Frame rootFrame = new Frame();
-            rootFrame.NavigationFailed += OnNavigationFailed;
-
-            // Navigate to the first page
-            rootFrame.Navigate(typeof(MainWindow));
-
-            // Place the frame in the current Window
-            _window.Content = rootFrame;
-            // Ensure the current window is active
             _window.Activate();
+            _windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(_window);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
