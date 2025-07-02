@@ -116,7 +116,7 @@ namespace LocalToSpotify
         // Switch pages to the Spotify Authentication page
         private void SpotifyAuthPageButton_Clicked(object sender, RoutedEventArgs e)
         {
-
+            Frame.Navigate(typeof(SpotifyAuth));
         }
 
         // Set the FileDirectory string whenever the entry text box is changed
