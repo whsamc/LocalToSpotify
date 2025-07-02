@@ -31,9 +31,13 @@ namespace LocalToSpotify
         public MainWindow()
         {
             this.InitializeComponent();
+            rootFrame.Navigate(typeof(MainPage));
+
+            /*
             Current = this;
             MyAppWindow = this.AppWindow;
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            */
         }
     }
 }
