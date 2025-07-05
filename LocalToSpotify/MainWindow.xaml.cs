@@ -33,11 +33,8 @@ namespace LocalToSpotify
             this.InitializeComponent();
             rootFrame.Navigate(typeof(MainPage));
 
-            /*
-            Current = this;
             MyAppWindow = this.AppWindow;
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            */
+            // var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         }
     }
 }
