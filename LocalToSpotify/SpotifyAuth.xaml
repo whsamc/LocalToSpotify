@@ -9,19 +9,25 @@
     mc:Ignorable="d">
 
     <Grid Margin="20,20,20,20">
-        
-        <Button
-            x:Name="HomePageButton"
-            Click="BackToPage"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Left"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock 
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+
+            <TextBlock 
             Text="Login to Spotify"
-            
-            HorizontalAlignment="Center" />
+            HorizontalAlignment="Center"/>
 
-        <TextBox
+            <TextBox
             x:Name="spotifyClientIDEntry"
             PlaceholderText="Spotify Client ID"
             Text=""
@@ -31,9 +37,22 @@
             MaxHeight="10"
             MaxWidth="400"/>
 
+        </Grid>
+        <Button
+            x:Name="HomePageButton"
+            Content="Home"
+            Click="BackToPage"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left"
+            Grid.Row="0"
+            Grid.Column="0"/>
         <Button
             x:Name="loginToSpotifyButton"
-            Click="AuthorizeSpotifyPage"/>
+            Content="Authenticate"
+            Click="AuthorizeSpotifyPage"
+            HorizontalAlignment="Center"
+            Grid.Row="2"
+            Grid.Column="1"/>
     </Grid>
     
 </Page>
