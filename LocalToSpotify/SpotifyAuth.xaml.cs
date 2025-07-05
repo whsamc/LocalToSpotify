@@ -34,6 +34,7 @@ namespace LocalToSpotify
         string redirect_uri = "LocalToSpotify://callback";
         string scope = "user-read-private playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read ugc-image-upload";
         string authUriString = "https://accounts.spotify.com/authorize";
+        string tokenUriString = "https://accounts.spotify.com/api/token";
         string spotifyCode;
         string spotifyCodeChallenge;
 
@@ -91,6 +92,8 @@ namespace LocalToSpotify
             spotifyCodeChallenge = CodeChallenge(spotifyCode);
 
             // Creates a dictionary with all the parameters needed to authenticate and login
+            // UNUSED
+            /*
             var parameters = new Dictionary<string, string>
             {
                 {"response_type", "code"},
@@ -100,6 +103,7 @@ namespace LocalToSpotify
                 {"code_challenge", spotifyCodeChallenge},
                 {"redirect_uri", redirect_uri}
             };
+            */
             
             // Setting up to get authorization code by combining url with parameters
             AuthRequestParams authRequestParams = AuthRequestParams.CreateForAuthorizationCodeRequest(client_id, new Uri(redirect_uri));
@@ -110,6 +114,38 @@ namespace LocalToSpotify
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
 
             AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
+
+            AuthResponse authResponse = authRequestResult.Response;
+
+            if (authResponse != null)
+            {
+                //To obtain the authorization code
+                GetAuthorizationToken(authResponse.Code);
+
+                //To obtain the access token
+                // DoTokenExchange(authResponse);
+            }
+            else
+            {
+                AuthFailure authFailure = authRequestResult.Failure;
+                // NotifyFailure(authFailure.Error, authFailure.ErrorDescription);
+            }
+        }
+
+        private async void GetAuthorizationToken(string code, AuthResponse response)
+        {
+            // Token request parameters
+            TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForAuthorizationCodeRequest(response);
+            ClientAuthentication clientAuth = ClientAuthentication.CreateForBasicAuthorization(client_id, spotifyCode);
+
+            // extra parameters
+            tokenRequestParams.GrantType = "authorization_code";
+            tokenRequestParams.Code = code;
+            tokenRequestParams.RedirectUri = new Uri(redirect_uri);
+
+
+            TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(
+                new Uri(tokenUriString), tokenRequestParams, clientAuth);
         }
 
 
