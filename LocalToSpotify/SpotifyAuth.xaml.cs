@@ -20,6 +20,7 @@ using TagLib;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using static System.Formats.Asn1.AsnWriter;
+using System.Diagnostics;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -113,8 +114,11 @@ namespace LocalToSpotify
             authRequestParams.Scope = scope;
             authRequestParams.CodeChallengeMethod = CodeChallengeMethodKind.S256;
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
+            authRequestParams.State = Guid.NewGuid().ToString(); // Random state to prevent CSRF attacks
 
             AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
+
+            Debug.WriteLine("AuthRequestResult: " + authRequestResult.ToString());
 
             AuthResponse authResponse = authRequestResult.Response;
 
@@ -144,8 +148,10 @@ namespace LocalToSpotify
             tokenRequestParams.Code = response.Code;
             tokenRequestParams.RedirectUri = new Uri(redirect_uri);
 
-            TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(
-                new Uri(tokenUriString), tokenRequestParams, clientAuth);
+            // Requesting the token using OAuth2Manager
+            TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
+
+            string token = tokenRequestResult.ToString();
         }
 
 
