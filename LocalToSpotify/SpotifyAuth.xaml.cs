@@ -120,7 +120,7 @@ namespace LocalToSpotify
             if (authResponse != null)
             {
                 //To obtain the authorization code
-                GetAuthorizationToken(authResponse.Code);
+                GetAuthorizationToken(authResponse);
 
                 //To obtain the access token
                 // DoTokenExchange(authResponse);
@@ -132,7 +132,7 @@ namespace LocalToSpotify
             }
         }
 
-        private async void GetAuthorizationToken(string code, AuthResponse response)
+        private async void GetAuthorizationToken(AuthResponse response)
         {
             // Token request parameters
             TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForAuthorizationCodeRequest(response);
@@ -140,7 +140,7 @@ namespace LocalToSpotify
 
             // extra parameters
             tokenRequestParams.GrantType = "authorization_code";
-            tokenRequestParams.Code = code;
+            tokenRequestParams.Code = response.Code;
             tokenRequestParams.RedirectUri = new Uri(redirect_uri);
 
 
