@@ -29,9 +29,10 @@ namespace LocalToSpotify
 {
     public sealed partial class SpotifyAuth : Page
     {
-        //
-        string client_id = "CLIENT_ID";
-        string redirect_uri = "LocalToSpotify://callback";
+        
+        string client_id = "CLIENT_ID"; // Client ID is replaced by the user
+        string client_secret = "CLIENT_SECRET"; // Client Secret is replaced by the user
+        string redirect_uri = "LocalToSpotify://callback";  // The app's redirect URI, which is used to redirect the user back to the app after authentication
         string scope = "user-read-private playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read ugc-image-upload";
         string authUriString = "https://accounts.spotify.com/authorize";
         string tokenUriString = "https://accounts.spotify.com/api/token";
@@ -136,13 +137,12 @@ namespace LocalToSpotify
         {
             // Token request parameters
             TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForAuthorizationCodeRequest(response);
-            ClientAuthentication clientAuth = ClientAuthentication.CreateForBasicAuthorization(client_id, spotifyCode);
+            ClientAuthentication clientAuth = ClientAuthentication.CreateForBasicAuthorization(client_id, client_secret);
 
             // extra parameters
             tokenRequestParams.GrantType = "authorization_code";
             tokenRequestParams.Code = response.Code;
             tokenRequestParams.RedirectUri = new Uri(redirect_uri);
-
 
             TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(
                 new Uri(tokenUriString), tokenRequestParams, clientAuth);
@@ -159,6 +159,12 @@ namespace LocalToSpotify
         private void spotifyClientIDEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             client_id = spotifyClientIDEntry.Text;
+        }
+
+        // Changes the client secret string whenever the entrytext is changed
+        private void spotifyClientSecretEntryTextChanged(object sender, TextChangedEventArgs e)
+        {
+            client_secret = spotifyClientSecretEntry.Text;
         }
     }
 }
