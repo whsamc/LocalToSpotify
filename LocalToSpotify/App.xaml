@@ -11,6 +11,8 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+
+            <x:String x:Key="SpotifyRedirectUri">localtospotify</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

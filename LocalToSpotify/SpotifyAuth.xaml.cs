@@ -158,7 +158,7 @@ namespace LocalToSpotify
         // Goes back to the main page
         private void BackToPage(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainWindow));
+            Frame.Navigate(typeof(MainPage));
         }
 
         // Changes the client id string whenever the entrytext is changed
