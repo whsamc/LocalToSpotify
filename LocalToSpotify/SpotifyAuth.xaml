@@ -10,9 +10,11 @@
 
     <Grid Margin="20,20,20,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="200"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -22,22 +24,41 @@
 
         <Grid Grid.Row="1"
               Grid.Column="1">
-
+            
             <TextBlock 
             Text="Login to Spotify"
+            VerticalAlignment="Center"
             HorizontalAlignment="Center"/>
+            
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Grid.Column="1">
 
             <TextBox
             x:Name="spotifyClientIDEntry"
             PlaceholderText="Spotify Client ID"
             Text=""
             TextChanged="spotifyClientIDEntryTextChanged"
-			HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
+            MaxHeight="10"
+            MaxWidth="400"
+            VerticalAlignment="Center"/>
+            
+        </Grid>
+
+        <Grid Grid.Row="3"
+              Grid.Column="1">
+
+            <TextBox
+            x:Name="spotifyClientSecretEntry"
+            PlaceholderText="Spotify Client Secret"
+            Text=""
+            TextChanged="spotifyClientSecretEntryTextChanged"
             MaxHeight="10"
             MaxWidth="400"/>
 
         </Grid>
+        
         <Button
             x:Name="HomePageButton"
             Content="Home"
@@ -51,7 +72,7 @@
             Content="Authenticate"
             Click="AuthorizeSpotifyPage"
             HorizontalAlignment="Center"
-            Grid.Row="2"
+            Grid.Row="4"
             Grid.Column="1"/>
     </Grid>
     
