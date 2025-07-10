@@ -15,7 +15,9 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Windows.AppLifecycle;
 using TagLib;
+using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -48,6 +50,14 @@ namespace LocalToSpotify
             _window = new MainWindow();
             _window.Activate();
             _windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(_window);
+
+            // Get the app instance
+            var myInstance = AppInstance.GetCurrent();
+            // Register the opened app for a specific key
+            var keyInstance = AppInstance.FindOrRegisterForKey("LocalToSpotifyInstance");
+
+
+            var activatedArgs = myInstance.GetActivatedEventArgs();
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
