@@ -55,8 +55,7 @@ namespace LocalToSpotify
             var myInstance = AppInstance.GetCurrent();
             // Register the opened app for a specific key
             var keyInstance = AppInstance.FindOrRegisterForKey("LocalToSpotifyInstance");
-
-
+            // Get the event arguments for app activation that was registered: Data payload (Launch, file, protocol, Startup task) and the type of registered activation (what event just occurred)
             var activatedArgs = myInstance.GetActivatedEventArgs();
         }
 
