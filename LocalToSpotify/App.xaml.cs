@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -11,14 +6,20 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.Windows.AppLifecycle;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using TagLib;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Microsoft.Windows.AppLifecycle;
-using TagLib;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,8 +31,8 @@ namespace LocalToSpotify
     /// </summary>
     public partial class App : Application
     {
-        private Window? _window;
-        private IntPtr _windowHandle;
+        public static Window? AppWindow;
+        public static IntPtr WindowHandle;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -48,9 +49,21 @@ namespace LocalToSpotify
         
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            _window = new MainWindow();
-            _window.Activate();
-            _windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(_window);
+            AppWindow = new MainWindow();
+
+            // Create a Frame to act as the navigation context and navigate to the first page
+            Frame rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+
+            // Navigate to the first page, configuring the new page by passing required information as a navigation parameter
+            rootFrame.Navigate(typeof(SpotifyAuth), args.Arguments);
+
+            // Place the frame in the current Window
+            AppWindow.Content = rootFrame;
+
+            // Put  mainpage to the foreground with input focus
+            AppWindow.Activate();
+            WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(AppWindow);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
