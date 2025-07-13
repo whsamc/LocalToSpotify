@@ -172,5 +172,16 @@ namespace LocalToSpotify
         {
             client_secret = spotifyClientSecretEntry.Text;
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // Check if the parameter is a Uri. If so, page was navigated to from browser
+            if(e.Parameter is Uri)
+            {
+                Debug.WriteLine("Redirected to from browser");
+            }
+        }
+
+        
     }
 }
