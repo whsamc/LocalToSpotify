@@ -19,6 +19,7 @@
 
                 <Button
                 x:Name="SpotifyAuthPageButton"
+                Content="Authenticate"
                 Click="SpotifyAuthPageButton_Clicked"
                 HorizontalAlignment="Right"
                 Background="Transparent"
