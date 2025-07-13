@@ -1,5 +1,6 @@
 using Microsoft.Security.Authentication.OAuth;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,9 +8,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Windowing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,12 +20,9 @@ using System.Text.RegularExpressions;
 using TagLib;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT.Interop;
 using static System.Formats.Asn1.AsnWriter;
-using System.Diagnostics;
 
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace LocalToSpotify
 {
@@ -87,7 +85,7 @@ namespace LocalToSpotify
         }
 
         // Open the authentication page through user's browser
-        async void AuthorizeSpotifyPage(object sender, RoutedEventArgs e)
+        private async void AuthorizeSpotifyPage(object sender, RoutedEventArgs e)
         {
             // secret stuff to make it safe
             spotifyCode = CodeVerifier();
@@ -116,7 +114,7 @@ namespace LocalToSpotify
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
             authRequestParams.State = Guid.NewGuid().ToString(); // Random state to prevent CSRF attacks
 
-            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
+            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyWindowId, new Uri(authUriString), authRequestParams);
 
             Debug.WriteLine("AuthRequestResult: " + authRequestResult.ToString());
 
@@ -175,13 +173,13 @@ namespace LocalToSpotify
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Debug.WriteLine("Navigated to...");
+
             // Check if the parameter is a Uri. If so, page was navigated to from browser
             if(e.Parameter is Uri)
             {
                 Debug.WriteLine("Redirected to from browser");
             }
         }
-
-        
     }
 }
