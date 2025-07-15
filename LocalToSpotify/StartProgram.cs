@@ -64,6 +64,7 @@ namespace LocalToSpotify
                 var protocolArgs = (ProtocolActivatedEventArgs)args.Data;
                 dispatcherQueue.TryEnqueue(() =>
                 {
+                    // This should check if the URI authority is "callback" (localtospotify://callback)
                     if (protocolArgs.Uri.Authority == "callback")
                     {
                         Debug.WriteLine(protocolArgs.Uri);
