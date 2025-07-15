@@ -31,8 +31,8 @@ namespace LocalToSpotify
     /// </summary>
     public partial class App : Application
     {
-        public static Window? AppWindow;
-        public static IntPtr WindowHandle;
+        public static MainWindow mainWindow { get; private set; }
+        public static IntPtr WindowHandle { get; private set; }
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -49,7 +49,10 @@ namespace LocalToSpotify
         
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            AppWindow = new MainWindow();
+            mainWindow = new MainWindow();
+            // Put  mainpage to the foreground with input focus
+            mainWindow.Activate();
+            WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
 
             // Create a Frame to act as the navigation context and navigate to the first page
             Frame rootFrame = new Frame();
@@ -59,11 +62,9 @@ namespace LocalToSpotify
             rootFrame.Navigate(typeof(SpotifyAuth), args.Arguments);
 
             // Place the frame in the current Window
-            AppWindow.Content = rootFrame;
+            mainWindow.Content = rootFrame;
 
-            // Put  mainpage to the foreground with input focus
-            AppWindow.Activate();
-            WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(AppWindow);
+
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
