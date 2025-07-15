@@ -1,9 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<!-- Disable auto-generated Program code to check for redirection when opening app when one exists already-->
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-	</PropertyGroup>
 	
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -17,6 +12,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+	<StartupObject>LocalToSpotify.StartProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="MainPage.xaml" />
