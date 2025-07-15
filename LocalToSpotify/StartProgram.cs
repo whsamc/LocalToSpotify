@@ -17,7 +17,7 @@ namespace LocalToSpotify
     /// Used to start the application and handle single instance activation. Redirects activation to the registered AppInstance if the app is already running.
     /// </summary>
 
-    public class Program
+    public class StartProgram
     {
         private static DispatcherQueue dispatcherQueue;
 
@@ -64,10 +64,10 @@ namespace LocalToSpotify
                 var protocolArgs = (ProtocolActivatedEventArgs)args.Data;
                 dispatcherQueue.TryEnqueue(() =>
                 {
-                    if (protocolArgs.Uri.Authority == "oauthcallback")
+                    if (protocolArgs.Uri.Authority == "callback")
                     {
                         Debug.WriteLine(protocolArgs.Uri);
-                        // App.AppWindow.OnUriCallback(protocolArgs.Uri);
+                        App.mainWindow.OnUriCallback(protocolArgs.Uri);
                     }
                     SetForegroundWindow(App.WindowHandle);
                 });
