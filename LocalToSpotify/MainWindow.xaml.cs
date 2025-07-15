@@ -29,7 +29,7 @@ namespace LocalToSpotify
     public sealed partial class MainWindow : Window
     {
         public static MainWindow Current;
-        public static AppWindow? MyAppWindow;
+        public static AppWindow MyAppWindow;
         public static WindowId MyWindowId;
 
         public MainWindow()
