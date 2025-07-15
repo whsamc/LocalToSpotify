@@ -114,8 +114,9 @@ namespace LocalToSpotify
             authRequestParams.CodeChallenge = spotifyCodeChallenge;
             authRequestParams.State = Guid.NewGuid().ToString(); // Random state to prevent CSRF attacks
 
-            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyWindowId, new Uri(authUriString), authRequestParams);
+            AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
 
+            Debug.WriteLine("TEST SPOTIFYAUTH WindowID: " + MainWindow.MyAppWindow.OwnerWindowId.ToString());
             Debug.WriteLine("AuthRequestResult: " + authRequestResult.ToString());
 
             AuthResponse authResponse = authRequestResult.Response;
@@ -156,7 +157,7 @@ namespace LocalToSpotify
         // Goes back to the main page
         private void BackToPage(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainWindow));
+            Frame.Navigate(typeof(MainPage));
         }
 
         // Changes the client id string whenever the entrytext is changed
