@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,6 +39,9 @@ namespace LocalToSpotify
         string tokenUriString = "https://accounts.spotify.com/api/token";
         string spotifyCode;
         string spotifyCodeChallenge;
+        string spotifyToken;
+
+        static HttpClient client = new HttpClient();
 
         public SpotifyAuth()
         {
@@ -125,9 +130,6 @@ namespace LocalToSpotify
             {
                 //To obtain the authorization code
                 GetAuthorizationToken(authResponse);
-
-                //To obtain the access token
-                // DoTokenExchange(authResponse);
             }
             else
             {
@@ -136,11 +138,19 @@ namespace LocalToSpotify
             }
         }
 
+        // Exchange the authorization code for an access token
         private async void GetAuthorizationToken(AuthResponse response)
         {
             // Token request parameters
             TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForAuthorizationCodeRequest(response);
             ClientAuthentication clientAuth = ClientAuthentication.CreateForBasicAuthorization(client_id, client_secret);
+
+            // Dictionary to add additional parameters
+            var additionalParams = new Dictionary<string, string>
+            {
+                {"method", "POST"},
+                {"Content-Type",  "application/x-www-form-urlencoded"}
+            };
 
             // extra parameters
             tokenRequestParams.GrantType = "authorization_code";
@@ -150,7 +160,12 @@ namespace LocalToSpotify
             // Requesting the token using OAuth2Manager
             TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
 
-            string token = tokenRequestResult.ToString();
+            spotifyToken = tokenRequestResult.Response.AccessToken;
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+            var apiresponse = client.GetStringAsync("https://api.spotify.com/v1/me").Result;
+
+            Debug.WriteLine("Spotify Token: " + spotifyToken);
+            
         }
 
 
