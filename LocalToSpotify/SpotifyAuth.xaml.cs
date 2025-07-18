@@ -1,5 +1,6 @@
 using Microsoft.Security.Authentication.OAuth;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,11 +8,13 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Windowing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,12 +22,9 @@ using System.Text.RegularExpressions;
 using TagLib;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT.Interop;
 using static System.Formats.Asn1.AsnWriter;
-using System.Diagnostics;
 
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace LocalToSpotify
 {
@@ -39,6 +39,9 @@ namespace LocalToSpotify
         string tokenUriString = "https://accounts.spotify.com/api/token";
         string spotifyCode;
         string spotifyCodeChallenge;
+        string spotifyToken;
+
+        static HttpClient client = new HttpClient();
 
         public SpotifyAuth()
         {
@@ -87,7 +90,7 @@ namespace LocalToSpotify
         }
 
         // Open the authentication page through user's browser
-        async void AuthorizeSpotifyPage(object sender, RoutedEventArgs e)
+        private async void AuthorizeSpotifyPage(object sender, RoutedEventArgs e)
         {
             // secret stuff to make it safe
             spotifyCode = CodeVerifier();
@@ -118,6 +121,7 @@ namespace LocalToSpotify
 
             AuthRequestResult authRequestResult = await OAuth2Manager.RequestAuthWithParamsAsync(MainWindow.MyAppWindow.OwnerWindowId, new Uri(authUriString), authRequestParams);
 
+            Debug.WriteLine("TEST SPOTIFYAUTH WindowID: " + MainWindow.MyAppWindow.OwnerWindowId.ToString());
             Debug.WriteLine("AuthRequestResult: " + authRequestResult.ToString());
 
             AuthResponse authResponse = authRequestResult.Response;
@@ -126,9 +130,6 @@ namespace LocalToSpotify
             {
                 //To obtain the authorization code
                 GetAuthorizationToken(authResponse);
-
-                //To obtain the access token
-                // DoTokenExchange(authResponse);
             }
             else
             {
@@ -137,11 +138,19 @@ namespace LocalToSpotify
             }
         }
 
+        // Exchange the authorization code for an access token
         private async void GetAuthorizationToken(AuthResponse response)
         {
             // Token request parameters
             TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForAuthorizationCodeRequest(response);
             ClientAuthentication clientAuth = ClientAuthentication.CreateForBasicAuthorization(client_id, client_secret);
+
+            // Dictionary to add additional parameters
+            var additionalParams = new Dictionary<string, string>
+            {
+                {"method", "POST"},
+                {"Content-Type",  "application/x-www-form-urlencoded"}
+            };
 
             // extra parameters
             tokenRequestParams.GrantType = "authorization_code";
@@ -151,7 +160,12 @@ namespace LocalToSpotify
             // Requesting the token using OAuth2Manager
             TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
 
-            string token = tokenRequestResult.ToString();
+            spotifyToken = tokenRequestResult.Response.AccessToken;
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+            var apiresponse = client.GetStringAsync("https://api.spotify.com/v1/me").Result;
+
+            Debug.WriteLine("Spotify Token: " + spotifyToken);
+            
         }
 
 
@@ -171,6 +185,17 @@ namespace LocalToSpotify
         private void spotifyClientSecretEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             client_secret = spotifyClientSecretEntry.Text;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            Debug.WriteLine("Navigated to...");
+
+            // Check if the parameter is a Uri. If so, page was navigated to from browser
+            if(e.Parameter is Uri)
+            {
+                Debug.WriteLine("Redirected to from browser");
+            }
         }
     }
 }
