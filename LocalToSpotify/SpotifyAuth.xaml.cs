@@ -18,6 +18,9 @@ using System.Net.Http.Json;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using TagLib;
 using Windows.Foundation;
@@ -31,8 +34,8 @@ namespace LocalToSpotify
     public sealed partial class SpotifyAuth : Page
     {
         
-        string client_id = "CLIENT_ID"; // Client ID is replaced by the user
-        string client_secret = "CLIENT_SECRET"; // Client Secret is replaced by the user
+        string client_id = "72eb2cc5a8bc438b9488a36f425f2dfc"; // Client ID is replaced by the user
+        string client_secret = "c61630683106409d89958279e0f8e089"; // Client Secret is replaced by the user
         string redirect_uri = "LocalToSpotify://callback";  // The app's redirect URI, which is used to redirect the user back to the app after authentication
         string scope = "user-read-private playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read ugc-image-upload";
         string authUriString = "https://accounts.spotify.com/authorize";
@@ -162,10 +165,13 @@ namespace LocalToSpotify
 
             spotifyToken = tokenRequestResult.Response.AccessToken;
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
-            var apiresponse = client.GetStringAsync("https://api.spotify.com/v1/me").Result;
+            var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result;
 
-            Debug.WriteLine("Spotify Token: " + spotifyToken);
+            // Profile user = apiresponse.
             
+
+            Debug.WriteLine("API Response: " + apiresponse);
+
         }
 
 
