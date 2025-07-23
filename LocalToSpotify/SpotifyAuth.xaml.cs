@@ -33,7 +33,6 @@ namespace LocalToSpotify
 {
     public sealed partial class SpotifyAuth : Page
     {
-        
         string client_id = "72eb2cc5a8bc438b9488a36f425f2dfc"; // Client ID is replaced by the user
         string client_secret = "CLIENT_SECRET"; // Client Secret is replaced by the user
         string redirect_uri = "LocalToSpotify://callback";  // The app's redirect URI, which is used to redirect the user back to the app after authentication
@@ -163,15 +162,21 @@ namespace LocalToSpotify
             // Requesting the token using OAuth2Manager
             TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
 
-            spotifyToken = tokenRequestResult.Response.AccessToken;
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
-            var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result;
+            spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
 
-            // Profile user = apiresponse.
+            // Get authorization from spotify with token
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+            var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
+
+            Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
+
+            // Bind the user profile to the MainPage variable userProfile
+            MainPage.userProfile = apiresponse;
             
 
-            Debug.WriteLine("API Response: " + apiresponse);
+            Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
 
+            Frame.Navigate(typeof(MainPage));
         }
 
 
