@@ -8,12 +8,11 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TagLib;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -22,14 +21,16 @@ namespace LocalToSpotify
 {
     public sealed partial class MainPage : Page
     {
-
-        public static MainPage Current;
         string? FileDirectory;
+        public static Profile userProfile = new Profile();
+        MainPage Current;
+        public string DisplayName { get; set; }
 
         public MainPage()
         {
             this.InitializeComponent();
             Current = this;
+            DataContext = Current;
 
         }
 
@@ -123,6 +124,23 @@ namespace LocalToSpotify
         private void ReadFileDirectoryPath(object sender, TextChangedEventArgs e)
         {
             FileDirectory = musicFileInput.Text;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if(userProfile.display_name != null)
+            {
+                Debug.WriteLine("This is userProfile: " + userProfile.display_name);
+                DisplayName = userProfile.display_name;
+            }
+            else
+            {
+                Debug.WriteLine("No data for userProfile.display_name");
+            }
+
+
+                Debug.WriteLine("Navigated to MainPage");
+
         }
     }
 }
