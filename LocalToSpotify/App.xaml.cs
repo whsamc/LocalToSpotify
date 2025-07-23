@@ -33,6 +33,9 @@ namespace LocalToSpotify
     {
         public static MainWindow mainWindow { get; private set; }
         public static IntPtr WindowHandle { get; private set; }
+
+        public static MainPage? mainPage = new MainPage();
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -59,7 +62,7 @@ namespace LocalToSpotify
             rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Navigate to the first page, configuring the new page by passing required information as a navigation parameter
-            rootFrame.Navigate(typeof(SpotifyAuth), args.Arguments);
+            rootFrame.Navigate(typeof(MainPage), args.Arguments);
 
             // Place the frame in the current Window
             mainWindow.Content = rootFrame;
