@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace LocalToSpotify
 {
-    internal class Profile
+    public class Profile
     {
         public string? display_name { get; set; }
+
+        public Profile()
+        {
+            display_name = "empty"; // Default display name
+        }
     }
 }
