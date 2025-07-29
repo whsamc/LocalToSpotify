@@ -26,23 +26,25 @@ using TagLib;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop;
-using static System.Formats.Asn1.AsnWriter;
+using Windows.Security.Credentials;
 
 
 namespace LocalToSpotify
 {
     public sealed partial class SpotifyAuth : Page
     {
-        string client_id = "72eb2cc5a8bc438b9488a36f425f2dfc"; // Client ID is replaced by the user
+        private string client_id = "72eb2cc5a8bc438b9488a36f425f2dfc"; // Client ID is replaced by the user
         string client_secret = "CLIENT_SECRET"; // Client Secret is replaced by the user
         string redirect_uri = "LocalToSpotify://callback";  // The app's redirect URI, which is used to redirect the user back to the app after authentication
         string scope = "user-read-private playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read ugc-image-upload";
         string authUriString = "https://accounts.spotify.com/authorize";
         string tokenUriString = "https://accounts.spotify.com/api/token";
-        string spotifyCode;
-        string spotifyCodeChallenge;
-        string spotifyToken;
+        private string spotifyCode;
+        private string spotifyCodeChallenge;
+        private string spotifyToken;
+        private string refreshToken;
 
+        PasswordVault vault = new PasswordVault(); // Used to store important sensitive information safely
         static HttpClient client = new HttpClient();
 
         public SpotifyAuth()
@@ -163,6 +165,7 @@ namespace LocalToSpotify
             TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
 
             spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
+            refreshToken = tokenRequestResult.Response.RefreshToken; // Save refresh token to variable
 
             // Get authorization from spotify with token
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
