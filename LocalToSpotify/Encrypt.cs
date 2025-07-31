@@ -13,17 +13,16 @@ using Buffer = Windows.Storage.Streams.Buffer;
 
 namespace LocalToSpotify
 {
-    public class Encrypt
+    internal class Encrypt
     {
         private string securityDescriptor = "LOCAL=user"; // Security descriptor for the DataProtectionProvider
+        private string configFilePath = @"LocalToSpotify\Config\Config.dat";
 
-        private void EncryptStringToFile(string plainText, string filePath)
+        internal void EncryptStringToFile(string plainText)
         {
             try
             {
-                FileStream fStream = new FileStream("Config.dat", FileMode.OpenOrCreate);   // This method covers if the file exists or not
-
-                byte[] entropy = CreateRandomEntropy(); // Create random entropy
+                FileStream fStream = new FileStream(configFilePath, FileMode.OpenOrCreate);   // This method covers if the file exists or 
 
                 // Encrypt string to task to wait for completion
                 IBuffer encryptedText = (IBuffer)ProtectAsync(plainText);
@@ -36,12 +35,6 @@ namespace LocalToSpotify
                 Console.WriteLine($"ERROR: {e.Message}");
             }
         }
-
-        private static byte[] CreateRandomEntropy()
-        {
-            return RandomNumberGenerator.GetBytes(16); // Create random entropy and return it
-        }
-
 
         private async Task<IBuffer> ProtectAsync(string plainText)
         {
@@ -60,8 +53,9 @@ namespace LocalToSpotify
 
         private async void WriteEncryptionToFile(FileStream stream, IBuffer encrypted)
         {
-            
             await stream.WriteAsync(encrypted.ToArray());
+
+            stream.Close();
         }
     }
 }
