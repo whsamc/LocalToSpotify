@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.DataProtection;
 using Windows.Storage.Streams;
+using Buffer = Windows.Storage.Streams.Buffer;
 
 namespace LocalToSpotify
 {
@@ -23,8 +25,10 @@ namespace LocalToSpotify
 
                 byte[] entropy = CreateRandomEntropy(); // Create random entropy
 
-                // Encrypt string
-                var x = ProtectAsync(plainText);
+                // Encrypt string to task to wait for completion
+                IBuffer encryptedText = (IBuffer)ProtectAsync(plainText);
+
+                WriteEncryptionToFile(fStream, encryptedText);
                 
             }
             catch (Exception e)
@@ -50,8 +54,14 @@ namespace LocalToSpotify
             // Encrypt the message.
             IBuffer buffProtected = await dpp.ProtectAsync(buffBinary);
 
-            // Execution of the SampleProtectAsync function resumes here after the awaited task (Provider.ProtectAsync) completes.
+            // Return encrypted text as buffer
             return buffProtected;
+        }
+
+        private async void WriteEncryptionToFile(FileStream stream, IBuffer encrypted)
+        {
+            
+            await stream.WriteAsync(encrypted.ToArray());
         }
     }
 }
