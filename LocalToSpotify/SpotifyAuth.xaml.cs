@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,8 +26,8 @@ using System.Text.RegularExpressions;
 using TagLib;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using WinRT.Interop;
 using Windows.Security.Credentials;
+using WinRT.Interop;
 
 
 namespace LocalToSpotify
@@ -166,6 +167,12 @@ namespace LocalToSpotify
 
             spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
             refreshToken = tokenRequestResult.Response.RefreshToken; // Save refresh token to variable
+
+            Encrypt encrypt = new Encrypt();    // Instantiate Encrypt class to encrypt the refresh token
+
+            encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
+
+            // vault.Add(new Windows.Security.Credentials.PasswordCredential("LocalToSpotify", client_id, refreshToken));
 
             // Get authorization from spotify with token
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
