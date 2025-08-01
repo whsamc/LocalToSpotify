@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -16,16 +17,23 @@ namespace LocalToSpotify
     internal class Encrypt
     {
         private string securityDescriptor = "LOCAL=user"; // Security descriptor for the DataProtectionProvider
-        private string configFilePath = @"LocalToSpotify\Config\Config.dat";
+        // private string configFilePath = @"\Config.dat";
+        private string configFilePath = @"E:\Source\Stuff\Config.dat";
 
-        internal void EncryptStringToFile(string plainText)
+        internal async Task EncryptStringToFile(string plainText)
         {
             try
             {
-                FileStream fStream = new FileStream(configFilePath, FileMode.OpenOrCreate);   // This method covers if the file exists or 
+                Debug.WriteLine("Attempting to encrypt text...");
+
+                FileStream fStream = new FileStream(configFilePath, FileMode.OpenOrCreate);   // This method covers if the file exists or not
+
+                Debug.WriteLine("Creating and opening file...");
 
                 // Encrypt string to task to wait for completion
-                IBuffer encryptedText = (IBuffer)ProtectAsync(plainText);
+                var encryptedTextTask = ProtectAsync(plainText);
+
+                IBuffer encryptedText = await encryptedTextTask;
 
                 WriteEncryptionToFile(fStream, encryptedText);
                 
@@ -47,6 +55,8 @@ namespace LocalToSpotify
             // Encrypt the message.
             IBuffer buffProtected = await dpp.ProtectAsync(buffBinary);
 
+            Debug.WriteLine("Encrypted text...");
+
             // Return encrypted text as buffer
             return buffProtected;
         }
@@ -56,6 +66,8 @@ namespace LocalToSpotify
             await stream.WriteAsync(encrypted.ToArray());
 
             stream.Close();
+
+            Debug.WriteLine("Written encrypted text to file...");
         }
     }
 }
