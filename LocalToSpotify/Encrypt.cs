@@ -31,7 +31,7 @@ namespace LocalToSpotify
                 Debug.WriteLine("Creating and opening file...");
 
                 // Encrypt string to task to wait for completion
-                var encryptedTextTask = ProtectAsync(plainText);
+                var encryptedTextTask = ProtectString(plainText);
 
                 // Await the task to get the encrypted text
                 IBuffer encryptedText = await encryptedTextTask;
@@ -45,9 +45,15 @@ namespace LocalToSpotify
             }
         }
 
-        private async Task<IBuffer> ProtectAsync(string plainText)
+        internal async Task DecryptFromFile()
+        {
+
+        }
+
+        private async Task<IBuffer> ProtectString(string plainText)
         {
             // Create a DataProtectionProvider object for the specified descriptor.
+            // Descriptor can be "LOCAL=user" for user-specific encryption or "LOCAL=machine" for machine-wide encryption.
             DataProtectionProvider dpp = new DataProtectionProvider(securityDescriptor);
 
             // Encode the plaintext input message to a buffer using the specified encoding
@@ -69,6 +75,30 @@ namespace LocalToSpotify
             stream.Close();
 
             Debug.WriteLine("Written encrypted text to file...");
+        }
+
+        private async Task<IBuffer> ReadBufferFromFile(FileStream stream)
+        {
+            byte[] buffer = new byte[stream.Length];    // Byte array to hold data from file
+            await stream.ReadAsync(buffer, 0, (int)stream.Length);  // Read the file into the byte array
+
+            IBuffer protectedBuffer = CryptographicBuffer.CreateFromByteArray(buffer); // Convert byte array to IBuffer
+
+            return protectedBuffer;
+        }
+
+        private async Task<string> UnprotectString(IBuffer protectedBuffer)
+        {
+            // Create a DataProtectionProvider object. Don't need descriptor here since we're unprotecting.
+            DataProtectionProvider dpp = new DataProtectionProvider();
+
+            // Decrypt message to IBuffer
+            IBuffer unprotectedBuffer = await dpp.UnprotectAsync(protectedBuffer);
+
+            // Convert the decrypted buffer back to a string and from binary to the actual information. Use same encoding as before.
+            string unprotectedString = CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, unprotectedBuffer);
+
+            return unprotectedString;
         }
     }
 }
