@@ -45,9 +45,23 @@ namespace LocalToSpotify
             }
         }
 
-        internal async Task DecryptFromFile()
+        internal async Task<string> DecryptFromFile()
         {
+            FileStream fstream = new FileStream(configFilePath, FileMode.Open); // Open the file
 
+            Debug.WriteLine("Opening file for decryption...");
+
+            // Read the encrypted text from the file and convert it to IBuffer after waiting for the task
+            var decryptedTextTask = ReadBufferFromFile(fstream);
+            IBuffer encryptedText = await decryptedTextTask;
+
+            // Unprotect the encrypted text to get the original string after waiting for the task
+            var unprotectedTextTask = UnprotectString(encryptedText);
+            string unprotectedText = await unprotectedTextTask;
+
+            Debug.WriteLine("Decrypted text...");
+
+            return unprotectedText; // Return the decrypted string
         }
 
         private async Task<IBuffer> ProtectString(string plainText)
@@ -70,7 +84,7 @@ namespace LocalToSpotify
 
         private async void WriteEncryptionToFile(FileStream stream, IBuffer encrypted)
         {
-            await stream.WriteAsync(encrypted.ToArray());
+            await stream.WriteAsync(encrypted.ToArray());   // Writing encrypted buffer to the file stream
 
             stream.Close();
 
@@ -82,7 +96,11 @@ namespace LocalToSpotify
             byte[] buffer = new byte[stream.Length];    // Byte array to hold data from file
             await stream.ReadAsync(buffer, 0, (int)stream.Length);  // Read the file into the byte array
 
+            Debug.WriteLine("Reading buffer from file...");
+
             IBuffer protectedBuffer = CryptographicBuffer.CreateFromByteArray(buffer); // Convert byte array to IBuffer
+
+            Debug.WriteLine("Converted byte array to IBuffer...");
 
             return protectedBuffer;
         }
