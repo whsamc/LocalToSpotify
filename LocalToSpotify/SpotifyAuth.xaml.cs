@@ -170,7 +170,7 @@ namespace LocalToSpotify
 
             Encrypt encrypt = new Encrypt();    // Instantiate Encrypt class to encrypt the refresh token
 
-            encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
+            await encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
 
             // vault.Add(new Windows.Security.Credentials.PasswordCredential("LocalToSpotify", client_id, refreshToken));
 
