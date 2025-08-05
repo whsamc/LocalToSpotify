@@ -33,6 +33,7 @@ namespace LocalToSpotify
                 // Encrypt string to task to wait for completion
                 var encryptedTextTask = ProtectAsync(plainText);
 
+                // Await the task to get the encrypted text
                 IBuffer encryptedText = await encryptedTextTask;
 
                 WriteEncryptionToFile(fStream, encryptedText);
