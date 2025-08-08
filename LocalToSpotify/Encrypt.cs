@@ -22,10 +22,9 @@ namespace LocalToSpotify
 
         internal async Task EncryptStringToFile(string plainText)
         {
+            Debug.WriteLine("Attempting to encrypt text...");
             try
             {
-                Debug.WriteLine("Attempting to encrypt text...");
-
                 FileStream fStream = new FileStream(configFilePath, FileMode.OpenOrCreate);   // This method covers if the file exists or not
 
                 Debug.WriteLine("Creating and opening file...");

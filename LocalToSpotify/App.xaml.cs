@@ -67,7 +67,8 @@ namespace LocalToSpotify
             // Place the frame in the current Window
             mainWindow.Content = rootFrame;
 
-
+            SpotifyAuth auth = new SpotifyAuth();
+            auth.CheckRefreshToken();
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)

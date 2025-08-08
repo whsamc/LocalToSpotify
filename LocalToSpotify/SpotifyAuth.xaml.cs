@@ -43,7 +43,6 @@ namespace LocalToSpotify
         private string spotifyCode;
         private string spotifyCodeChallenge;
 
-        PasswordVault vault = new PasswordVault(); // Used to store important sensitive information safely
         static HttpClient client = new HttpClient();
 
         public SpotifyAuth()
@@ -204,8 +203,21 @@ namespace LocalToSpotify
 
                 try
                 {
+                    /* Refresh token parameters require the following:
+                     *      grant_type= "refresh_token"
+                     *      refresh_token = {refresh_token}
+                     *      client_id = {client_id}
+                     *      
+                     * Also the following headers:
+                     *      Content-Type = "application/x-www-form-urlencoded"
+                     *      Authorization = "Basic {base64(client_id:client_secret)}"
+                     */
+
+
+
                     // Set up the token request parameters for refreshing the token
                     TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForRefreshToken(refreshToken);
+                    tokenRequestParams.ClientId = client_id; // Set the client ID
 
                     // Dictionary to add additional parameters
                     var additionalParams = new Dictionary<string, string>
@@ -216,11 +228,11 @@ namespace LocalToSpotify
 
                     // extra parameters
                     tokenRequestParams.GrantType = "refresh_token";
-
                     TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams);
 
+
                     // Check if the token request was successful. If so, use the access token to get the user profile
-                    if (tokenRequestResult != null)
+                    if (tokenRequestResult.Response != null)
                     {
                         string spotifyToken = tokenRequestResult.Response.AccessToken;
 
