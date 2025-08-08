@@ -18,7 +18,7 @@ namespace LocalToSpotify
     {
         private string securityDescriptor = "LOCAL=user"; // Security descriptor for the DataProtectionProvider
         // private string configFilePath = @"\Config.dat";
-        private string configFilePath = @"E:\Source\Stuff\Config.dat";
+        public static string configFilePath = @"E:\Source\Stuff\Config.dat";
 
         internal async Task EncryptStringToFile(string plainText)
         {
@@ -47,21 +47,31 @@ namespace LocalToSpotify
 
         internal async Task<string> DecryptFromFile()
         {
-            FileStream fstream = new FileStream(configFilePath, FileMode.Open); // Open the file
+            try
+            {
+                FileStream fstream = new FileStream(configFilePath, FileMode.Open); // Open the file
 
-            Debug.WriteLine("Opening file for decryption...");
+                Debug.WriteLine("Opening file for decryption...");
 
-            // Read the encrypted text from the file and convert it to IBuffer after waiting for the task
-            var decryptedTextTask = ReadBufferFromFile(fstream);
-            IBuffer encryptedText = await decryptedTextTask;
+                // Read the encrypted text from the file and convert it to IBuffer after waiting for the task
+                var decryptedTextTask = ReadBufferFromFile(fstream);
+                IBuffer encryptedText = await decryptedTextTask;
 
-            // Unprotect the encrypted text to get the original string after waiting for the task
-            var unprotectedTextTask = UnprotectString(encryptedText);
-            string unprotectedText = await unprotectedTextTask;
+                // Unprotect the encrypted text to get the original string after waiting for the task
+                var unprotectedTextTask = UnprotectString(encryptedText);
+                string unprotectedText = await unprotectedTextTask;
 
-            Debug.WriteLine("Decrypted text...");
+                fstream.Close();
 
-            return unprotectedText; // Return the decrypted string
+                Debug.WriteLine("Decrypted text...");
+
+                return unprotectedText; // Return the decrypted string
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"ERROR: {e.Message}");
+                return string.Empty; // Return an empty string in case of error
+            }
         }
 
         private async Task<IBuffer> ProtectString(string plainText)

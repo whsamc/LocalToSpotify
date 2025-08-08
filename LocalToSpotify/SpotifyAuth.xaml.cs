@@ -42,8 +42,6 @@ namespace LocalToSpotify
         string tokenUriString = "https://accounts.spotify.com/api/token";
         private string spotifyCode;
         private string spotifyCodeChallenge;
-        private string spotifyToken;
-        private string refreshToken;
 
         PasswordVault vault = new PasswordVault(); // Used to store important sensitive information safely
         static HttpClient client = new HttpClient();
@@ -162,33 +160,89 @@ namespace LocalToSpotify
             tokenRequestParams.Code = response.Code;
             tokenRequestParams.RedirectUri = new Uri(redirect_uri);
 
-            // Requesting the token using OAuth2Manager
-            TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
+            try
+            {
+                // Requesting the token using OAuth2Manager
+                TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams, clientAuth);
 
-            spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
-            refreshToken = tokenRequestResult.Response.RefreshToken; // Save refresh token to variable
+                string spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
+                string refreshToken = tokenRequestResult.Response.RefreshToken; // Save refresh token to variable
 
-            Encrypt encrypt = new Encrypt();    // Instantiate Encrypt class to encrypt the refresh token
+                Encrypt encrypt = new Encrypt();    // Instantiate Encrypt class to encrypt the refresh token
 
-            await encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
+                await encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
 
-            // vault.Add(new Windows.Security.Credentials.PasswordCredential("LocalToSpotify", client_id, refreshToken));
+                // Get authorization from spotify with token
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+                var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
 
-            // Get authorization from spotify with token
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
-            var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
+                Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
 
-            Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
+                // Bind the user profile to the MainPage variable userProfile
+                MainPage.userProfile = apiresponse;
 
-            // Bind the user profile to the MainPage variable userProfile
-            MainPage.userProfile = apiresponse;
-            
 
-            Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
+                Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error requesting token: " + ex.Message);
+                return;
+            }
 
             Frame.Navigate(typeof(MainPage));
         }
 
+        internal async void CheckRefreshToken()
+        {
+            // Check if the config file exists, before trying to read from it
+            if (System.IO.File.Exists(Encrypt.configFilePath))
+            {
+                Encrypt encrypt = new Encrypt(); // Instantiate Encrypt class to decrypt the refresh token
+                // Decrypt the refresh token from the file
+                string refreshToken = await encrypt.DecryptFromFile();
+
+                try
+                {
+                    // Set up the token request parameters for refreshing the token
+                    TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForRefreshToken(refreshToken);
+
+                    // Dictionary to add additional parameters
+                    var additionalParams = new Dictionary<string, string>
+                    {
+                        {"method", "POST" },
+                        {"Content-Type",  "application/x-www-form-urlencoded"}
+                    };
+
+                    // extra parameters
+                    tokenRequestParams.GrantType = "refresh_token";
+
+                    TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams);
+
+                    // Check if the token request was successful. If so, use the access token to get the user profile
+                    if (tokenRequestResult != null)
+                    {
+                        string spotifyToken = tokenRequestResult.Response.AccessToken;
+
+                        // Get authorization from spotify with token
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+                        var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
+
+                        Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
+
+                        // Bind the user profile to the MainPage variable userProfile
+                        MainPage.userProfile = apiresponse;
+
+                        Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error refreshing token: " + ex.Message);
+                    return;
+                }
+            }
+        }
 
         // Goes back to the main page
         private void BackToPage(object sender, RoutedEventArgs e)

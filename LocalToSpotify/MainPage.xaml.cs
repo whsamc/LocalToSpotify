@@ -31,7 +31,7 @@ namespace LocalToSpotify
             this.InitializeComponent();
             Current = this;
             DataContext = Current;
-
+            TryAuthorizationRefresh();
         }
 
         // ObservableCollection needs to be a property to properly data bind
@@ -49,6 +49,12 @@ namespace LocalToSpotify
             ".wma",
             ".aac"
         };
+
+        private void TryAuthorizationRefresh()
+        {
+            SpotifyAuth auth = new SpotifyAuth();
+            auth.CheckRefreshToken();
+        }
 
         // Get the music file paths for the folder
         private void ReadThroughFiles(object sender, RoutedEventArgs e)
