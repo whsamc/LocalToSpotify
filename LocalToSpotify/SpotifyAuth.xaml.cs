@@ -42,6 +42,7 @@ namespace LocalToSpotify
         string tokenUriString = "https://accounts.spotify.com/api/token";
         private string spotifyCode;
         private string spotifyCodeChallenge;
+        private Encrypt encrypt = new Encrypt();
 
         static HttpClient client = new HttpClient();
 
@@ -167,8 +168,6 @@ namespace LocalToSpotify
                 string spotifyToken = tokenRequestResult.Response.AccessToken; // Save spotify token to variable
                 string refreshToken = tokenRequestResult.Response.RefreshToken; // Save refresh token to variable
 
-                Encrypt encrypt = new Encrypt();    // Instantiate Encrypt class to encrypt the refresh token
-
                 await encrypt.EncryptStringToFile(refreshToken);  // Encrypt the refresh token and save it to a file
 
                 // Get authorization from spotify with token
@@ -197,7 +196,6 @@ namespace LocalToSpotify
             // Check if the config file exists, before trying to read from it
             if (System.IO.File.Exists(Encrypt.configFilePath))
             {
-                Encrypt encrypt = new Encrypt(); // Instantiate Encrypt class to decrypt the refresh token
                 // Decrypt the refresh token from the file
                 string refreshToken = await encrypt.DecryptFromFile();
 
@@ -235,6 +233,9 @@ namespace LocalToSpotify
                     if (tokenRequestResult.Response != null)
                     {
                         string spotifyToken = tokenRequestResult.Response.AccessToken;
+                        string newRefreshToken = tokenRequestResult.Response.RefreshToken; // Get the new refresh token
+
+                        await encrypt.EncryptStringToFile(newRefreshToken); // Encrypt the new refresh token and save it to a file
 
                         // Get authorization from spotify with token
                         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
