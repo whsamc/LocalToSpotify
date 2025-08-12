@@ -136,10 +136,7 @@ namespace LocalToSpotify
             {
                 Debug.WriteLine("No data for userProfile.display_name");
             }
-
-
-                Debug.WriteLine("Navigated to MainPage");
-
+            Debug.WriteLine("Navigated to MainPage");
         }
     }
 }
