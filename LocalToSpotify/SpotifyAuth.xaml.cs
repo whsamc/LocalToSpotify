@@ -44,7 +44,7 @@ namespace LocalToSpotify
         private string spotifyCodeChallenge;
         private Encrypt encrypt = new Encrypt();
 
-        static HttpClient client = new HttpClient();
+        private HttpClient client = new HttpClient();
 
         public SpotifyAuth()
         {
