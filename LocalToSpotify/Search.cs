@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Diagnostics;
 
 namespace LocalToSpotify
 {
@@ -12,7 +13,7 @@ namespace LocalToSpotify
     {
         private HttpClient client = new HttpClient();
 
-        internal async Task<MusicFile> SearchSong(string spotifyToken, string title, string artist, string album)
+        internal async Task<MusicList> SearchSong(string spotifyToken, string title, string artist, string album)
         {
             try
             {
@@ -22,6 +23,7 @@ namespace LocalToSpotify
                 sb.Append(artist);
                 sb.Append("+");
                 sb.Append(album);
+                sb.Append("&type=track&limit=3");
 
                 // Set the authorization header with your access token
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
@@ -31,8 +33,13 @@ namespace LocalToSpotify
                 if (response.IsSuccessStatusCode)
                 {
                     // Parse the JSON response into a MusicFile object
-                    var musicFile = await response.Content.ReadFromJsonAsync<MusicFile>();
-                    return musicFile;
+                    MusicList musicList = await response.Content.ReadFromJsonAsync<MusicList>();
+                    foreach(var song in musicList.Songs)
+                    {
+                        Debug.WriteLine(song.Title + " by " + song.Artist);
+                    }
+
+                    return musicList;
                 }
                 else
                 {
