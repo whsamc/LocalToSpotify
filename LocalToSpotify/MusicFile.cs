@@ -24,4 +24,17 @@ namespace LocalToSpotify
             this.Filepath = filepath;
         }
     }
+
+    public class MusicList
+    {
+        public List<MusicFile> Songs { get; }
+        public MusicList()
+        {
+            Songs = new List<MusicFile>();
+        }
+        public void AddFile(MusicFile file)
+        {
+            Songs.Add(file);
+        }
+    }
 }
