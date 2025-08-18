@@ -25,6 +25,8 @@ namespace LocalToSpotify
         public static Profile userProfile = new Profile();
         MainPage Current;
         public string DisplayName { get; set; }
+        
+        private string _spotifyToken;
 
         public MainPage()
         {
@@ -82,6 +84,14 @@ namespace LocalToSpotify
                 {
                     AddToMusicList(ParseMusicFile(MusicFilePath));
                 }
+            }
+
+            try
+            {
+                Search search = new Search();
+
+                // Search using spotify api and return its search results
+                search.SearchSong();
             }
         }
 
