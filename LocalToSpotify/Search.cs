@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Diagnostics;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json;
 
 namespace LocalToSpotify
 {
-    class Search
+    internal class Search
     {
         private HttpClient client = new HttpClient();
 
-        internal async Task<MusicList> SearchSong(string spotifyToken, string title, string artist, string album)
+        internal async Task<Root> SearchSong(string spotifyToken, string title, string artist, string album)
         {
             try
             {
@@ -32,14 +34,16 @@ namespace LocalToSpotify
                 var response = await client.GetAsync(sb.ToString());
                 if (response.IsSuccessStatusCode)
                 {
-                    // Parse the JSON response into a MusicFile object
-                    MusicList musicList = await response.Content.ReadFromJsonAsync<MusicList>();
-                    foreach(var song in musicList.Songs)
+                    // Parse the JSON response into a json object
+                    var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
+                    Root spotifySearch = JsonConvert.DeserializeObject<Root>(response.ToString());
+
+                    foreach(var item in spotifySearch.tracks.items)
                     {
-                        Debug.WriteLine(song.Title + " by " + song.Artist);
+                        Debug.WriteLine(item.name + " by " + item.artists);
                     }
 
-                    return musicList;
+                    return spotifySearch;
                 }
                 else
                 {
@@ -51,5 +55,6 @@ namespace LocalToSpotify
                 Console.WriteLine($"Exception occurred: {ex.Message}");
                 return null; // or handle the error as needed
             }
+        }
     }
 }
