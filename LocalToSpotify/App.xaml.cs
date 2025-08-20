@@ -34,7 +34,8 @@ namespace LocalToSpotify
         public static MainWindow mainWindow { get; private set; }
         public static IntPtr WindowHandle { get; private set; }
 
-        public static MainPage? mainPage = new MainPage();
+        public static MainPage mainPage = new MainPage();
+        public static SpotifyAuth spotifyAuth = new SpotifyAuth();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -67,8 +68,9 @@ namespace LocalToSpotify
             // Place the frame in the current Window
             mainWindow.Content = rootFrame;
 
-            SpotifyAuth auth = new SpotifyAuth();
-            auth.CheckRefreshToken();
+            mainPage = rootFrame.Content as MainPage;
+
+            spotifyAuth.CheckRefreshToken();
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)

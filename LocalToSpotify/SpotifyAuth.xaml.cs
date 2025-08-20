@@ -176,11 +176,12 @@ namespace LocalToSpotify
 
                 Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
 
+                MainPage mainpage = App.mainPage; // Get the current MainPage instance
+
                 // Bind the user profile to the MainPage variable userProfile
-                MainPage.userProfile = apiresponse;
-
-
-                Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
+                mainpage.userProfile = apiresponse;
+                
+                Debug.WriteLine("Main Page userProfile: " + mainpage.userProfile.display_name);
             }
             catch (Exception ex)
             {
@@ -188,7 +189,7 @@ namespace LocalToSpotify
                 return;
             }
 
-            Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(MainPage), App.mainPage);
         }
 
         internal async void CheckRefreshToken()
@@ -210,8 +211,6 @@ namespace LocalToSpotify
                      *      Content-Type = "application/x-www-form-urlencoded"
                      *      Authorization = "Basic {base64(client_id:client_secret)}"
                      */
-
-
 
                     // Set up the token request parameters for refreshing the token
                     TokenRequestParams tokenRequestParams = TokenRequestParams.CreateForRefreshToken(refreshToken);
@@ -243,10 +242,12 @@ namespace LocalToSpotify
 
                         Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
 
-                        // Bind the user profile to the MainPage variable userProfile
-                        MainPage.userProfile = apiresponse;
+                        MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
-                        Debug.WriteLine("Main Page userProfile: " + MainPage.userProfile.display_name);
+                        // Bind the user profile to the MainPage variable userProfile
+                        mainpage.userProfile = apiresponse;
+
+                        Debug.WriteLine("Main Page userProfile: " + mainpage.userProfile.display_name);
                     }
                 }
                 catch (Exception ex)
@@ -260,7 +261,7 @@ namespace LocalToSpotify
         // Goes back to the main page
         private void BackToPage(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(MainPage), App.mainPage);
         }
 
         // Changes the client id string whenever the entrytext is changed

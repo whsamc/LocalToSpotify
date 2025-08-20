@@ -22,11 +22,12 @@ namespace LocalToSpotify
     public sealed partial class MainPage : Page
     {
         string? FileDirectory;
-        public static Profile userProfile = new Profile();
+        public Profile userProfile = new Profile();
         MainPage Current;
         public string DisplayName { get; set; }
         
-        private string _spotifyToken;
+        private string _spotifyToken = "";
+        public string SpotifyToken { set { _spotifyToken = value; } }
 
         public MainPage()
         {
@@ -91,7 +92,11 @@ namespace LocalToSpotify
                 Search search = new Search();
 
                 // Search using spotify api and return its search results
-                search.SearchSong();
+                // search.SearchSong();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error during search: {ex.Message}");
             }
         }
 
@@ -126,7 +131,7 @@ namespace LocalToSpotify
         // Switch pages to the Spotify Authentication page
         private void SpotifyAuthPageButton_Clicked(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SpotifyAuth));
+            Frame.Navigate(typeof(SpotifyAuth), App.spotifyAuth);
         }
 
         // Set the FileDirectory string whenever the entry text box is changed
