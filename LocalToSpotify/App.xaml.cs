@@ -63,7 +63,7 @@ namespace LocalToSpotify
             rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Navigate to the first page, configuring the new page by passing required information as a navigation parameter
-            rootFrame.Navigate(typeof(MainPage), args.Arguments);
+            rootFrame.Navigate(typeof(MainPage));
 
             // Place the frame in the current Window
             mainWindow.Content = rootFrame;
