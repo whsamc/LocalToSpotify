@@ -22,12 +22,9 @@ namespace LocalToSpotify
     public sealed partial class MainPage : Page
     {
         string? FileDirectory;
-        public Profile userProfile = new Profile();
         MainPage Current;
         public string DisplayName { get; set; }
-        
-        private string _spotifyToken = "";
-        public string SpotifyToken { set { _spotifyToken = value; } }
+        Data Data => Data.Instance;
 
         public MainPage()
         {
@@ -142,10 +139,10 @@ namespace LocalToSpotify
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(userProfile.display_name != null)
+            if(Data.userProfile.display_name != null)
             {
-                Debug.WriteLine("This is userProfile: " + userProfile.display_name);
-                DisplayName = userProfile.display_name;
+                Debug.WriteLine("This is userProfile: " + Data.userProfile.display_name);
+                DisplayName = Data.userProfile.display_name;
             }
             else
             {
