@@ -22,8 +22,6 @@ namespace LocalToSpotify
         private string _spotifyToken = "";
         public string SpotifyToken { get { return _spotifyToken; } set { _spotifyToken = value; } }
         public Profile userProfile = new Profile();
-
-
-    }
+        string? FileDirectory;
     }
 }
