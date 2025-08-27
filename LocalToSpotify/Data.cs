@@ -10,10 +10,9 @@ namespace LocalToSpotify
 {
     internal sealed class Data
     {
-        /*
-         *  Singleton implementation for Data class.
-         *  Uses .NET 6+ Lazy<T> to ensure thread-safe, lazy initialization.
-         */
+        // Singleton implementation for Data class.
+        // Uses .NET 6+ Lazy<T> to ensure thread-safe, lazy initialization.
+
         private static readonly Lazy<Data> data = new Lazy<Data>(() => new Data());
         public static Data Instance { get { return data.Value; } }
         private Data() { }
