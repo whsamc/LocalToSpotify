@@ -42,6 +42,9 @@ namespace LocalToSpotify
         string tokenUriString = "https://accounts.spotify.com/api/token";
         private string spotifyCode;
         private string spotifyCodeChallenge;
+
+        Data Data => Data.Instance;
+
         private Encrypt encrypt = new Encrypt();
 
         private HttpClient client = new HttpClient();
@@ -179,9 +182,9 @@ namespace LocalToSpotify
                 MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
                 // Bind the user profile to the MainPage variable userProfile
-                mainpage.userProfile = apiresponse;
+                Data.userProfile = apiresponse;
                 
-                Debug.WriteLine("Main Page userProfile: " + mainpage.userProfile.display_name);
+                Debug.WriteLine("Main Page userProfile: " + Data.userProfile.display_name);
             }
             catch (Exception ex)
             {
@@ -245,9 +248,9 @@ namespace LocalToSpotify
                         MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
                         // Bind the user profile to the MainPage variable userProfile
-                        mainpage.userProfile = apiresponse;
+                        Data.userProfile = apiresponse;
 
-                        Debug.WriteLine("Main Page userProfile: " + mainpage.userProfile.display_name);
+                        Debug.WriteLine("Main Page userProfile: " + Data.userProfile.display_name);
                     }
                 }
                 catch (Exception ex)
