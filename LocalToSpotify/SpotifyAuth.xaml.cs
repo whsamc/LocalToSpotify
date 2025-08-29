@@ -177,14 +177,14 @@ namespace LocalToSpotify
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
                 var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
 
-                Debug.WriteLine("SpotifyAuth userProfile: " + apiresponse.display_name);
+                Debug.WriteLine("SpotifyAuth UserProfile: " + apiresponse.display_name);
 
                 MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
                 // Bind the user profile to the MainPage variable userProfile
-                Data.userProfile = apiresponse;
+                Data.UserProfile = apiresponse;
                 
-                Debug.WriteLine("Main Page userProfile: " + Data.userProfile.display_name);
+                Debug.WriteLine("Main Page UserProfile: " + Data.UserProfile.display_name);
             }
             catch (Exception ex)
             {
@@ -248,9 +248,9 @@ namespace LocalToSpotify
                         MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
                         // Bind the user profile to the MainPage variable userProfile
-                        Data.userProfile = apiresponse;
+                        Data.UserProfile = apiresponse;
 
-                        Debug.WriteLine("Main Page userProfile: " + Data.userProfile.display_name);
+                        Debug.WriteLine("Main Page UserProfile: " + Data.UserProfile.display_name);
                     }
                 }
                 catch (Exception ex)

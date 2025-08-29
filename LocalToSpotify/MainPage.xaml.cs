@@ -139,14 +139,14 @@ namespace LocalToSpotify
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(Data.userProfile.display_name != null)
+            if(Data.UserProfile.display_name != null)
             {
-                Debug.WriteLine("This is userProfile: " + Data.userProfile.display_name);
-                DisplayName = Data.userProfile.display_name;
+                Debug.WriteLine("This is UserProfile: " + Data.UserProfile.display_name);
+                DisplayName = Data.UserProfile.display_name;
             }
             else
             {
-                Debug.WriteLine("No data for userProfile.display_name");
+                Debug.WriteLine("No data for UserProfile.display_name");
             }
             Debug.WriteLine("Navigated to MainPage");
         }
