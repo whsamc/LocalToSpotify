@@ -36,6 +36,7 @@ namespace LocalToSpotify
 
         public static MainPage mainPage = new MainPage();
         public static SpotifyAuth spotifyAuth = new SpotifyAuth();
+        public static Frame rootFrame;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -59,7 +60,7 @@ namespace LocalToSpotify
             WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
 
             // Create a Frame to act as the navigation context and navigate to the first page
-            Frame rootFrame = new Frame();
+            rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Navigate to the first page, configuring the new page by passing required information as a navigation parameter
