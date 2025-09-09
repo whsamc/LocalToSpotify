@@ -42,10 +42,17 @@ namespace LocalToSpotify
             {
                 _userProfile = value;
                 OnPropertyChanged();
-
             }
         }
-        public string? FileDirectory;
+        public string FileDirectory
+        {
+            get { return _fileDirectory; }
+            set
+            {
+                _fileDirectory = value;
+                OnPropertyChanged();
+            }
+        }
 
         // Call this method whenever property is updated
         //  CallerMemberName
