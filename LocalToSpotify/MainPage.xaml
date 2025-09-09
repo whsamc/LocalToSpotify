@@ -9,6 +9,7 @@
     mc:Ignorable="d">
 
     <Grid
+        Name="MainPageGrid"
         DataContext="{x:Bind Path=Current}">
         <ScrollView>
             <StackPanel          
@@ -74,8 +75,10 @@
                           Grid.Column="3"
                           Margin="10, 10, 0, 5">
 
-                        <TextBlock Text="{x:Bind Data.UserProfile.display_name}"
-                                   Margin="50,0"
+                        <TextBlock 
+                            Name="displayNameTextBlock"
+                            Text="{x:Bind Data.UserProfile.display_name}"
+                            Margin="50,0"
                                    />
                     </Grid>
                     <Grid Grid.Row="1"
