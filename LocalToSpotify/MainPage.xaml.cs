@@ -141,7 +141,7 @@ namespace LocalToSpotify
         {
             if(Data.UserProfile.display_name != null)
             {
-                Debug.WriteLine("This is UserProfile: " + Data.UserProfile.display_name);
+                Debug.WriteLine("MainPage UserProfile: " + Data.UserProfile.display_name);
                 DisplayName = Data.UserProfile.display_name;
             }
             else
