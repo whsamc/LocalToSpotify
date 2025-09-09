@@ -250,8 +250,6 @@ namespace LocalToSpotify
                         // Bind the user profile to the MainPage variable userProfile
                         Data.UserProfile = apiresponse;
 
-                        Debug.WriteLine("Main Page UserProfile: " + Data.UserProfile.display_name);
-
                         // To refresh the page with the new user profile data. TEMPORARY
                         App.rootFrame.Navigate(typeof(MainPage), App.mainPage);
                     }
