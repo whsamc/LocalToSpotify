@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -23,8 +24,11 @@ namespace LocalToSpotify
 
         private string _spotifyToken = "";
         private string _fileDirectory = "";
+        private ObservableCollection<SpotifySearchResponse> _searchList = new ObservableCollection<SpotifySearchResponse>();
 
         private Profile _userProfile = new Profile();
+        private SpotifySearchResponse _searchResponse = new SpotifySearchResponse();
+
         public string SpotifyToken
         {
             get { return _spotifyToken; }
@@ -44,12 +48,33 @@ namespace LocalToSpotify
                 OnPropertyChanged();
             }
         }
+
         public string FileDirectory
         {
             get { return _fileDirectory; }
             set
             {
                 _fileDirectory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SpotifySearchResponse SearchResponse
+        {
+            get { return _searchResponse; }
+            set
+            {
+                _searchResponse = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<SpotifySearchResponse> SearchList
+        {
+            get { return _searchList; }
+            set
+            {
+                _searchList = value;
                 OnPropertyChanged();
             }
         }
