@@ -15,7 +15,7 @@ namespace LocalToSpotify
     {
         private HttpClient client = new HttpClient();
 
-        internal async Task<Root> SearchSong(string spotifyToken, string title, string artist, string album)
+        internal async Task<SpotifySearchResponse> SearchSong(string spotifyToken, string title, string artist, string album)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace LocalToSpotify
                 {
                     // Parse the JSON response into a json object
                     var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
-                    Root spotifySearch = JsonConvert.DeserializeObject<Root>(response.ToString());
+                    SpotifySearchResponse spotifySearch = JsonConvert.DeserializeObject<SpotifySearchResponse>(response.ToString());
 
                     foreach(var item in spotifySearch.tracks.items)
                     {
