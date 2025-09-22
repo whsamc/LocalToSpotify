@@ -101,7 +101,8 @@ namespace LocalToSpotify
             {
                 Search search = new Search();
                 
-                foreach(MusicInfo musicInfo in MusicList)
+                Debug.WriteLine("Iterating through MusicList and searching Spotify for each song...");
+                foreach (MusicInfo musicInfo in MusicList)
                 {
                     // Search using spotify api and return its search results
                     var searchResults = await search.SearchSong(Data.SpotifyToken, musicInfo);
@@ -113,6 +114,7 @@ namespace LocalToSpotify
                             Debug.WriteLine($"Item {i+1}: {searchResults.tracks.items[i].name} by {string.Join(", ", searchResults.tracks.items[i].artists.Select(a => a.name))}");
                         }
 
+                        Debug.WriteLine("Adding search results to Data.SearchList...");
                         Data.SearchList.Add(searchResults);
                     }
                 }
