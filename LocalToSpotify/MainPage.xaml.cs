@@ -104,18 +104,25 @@ namespace LocalToSpotify
                 Debug.WriteLine("Iterating through MusicList and searching Spotify for each song...");
                 foreach (MusicInfo musicInfo in MusicList)
                 {
-                    // Search using spotify api and return its search results
-                    var searchResults = await search.SearchSong(Data.SpotifyToken, musicInfo);
-                    if (searchResults != null)
+                    if(Data.SpotifyToken != null)
                     {
-                        Debug.WriteLine($"Search results for {musicInfo.Title}: {searchResults.tracks.items.Count} items found.");
-                        for(int i = 0; i < 3; i++)
+                        // Search using spotify api and return its search results
+                        var searchResults = await search.SearchSong(Data.SpotifyToken, musicInfo);
+                        if (searchResults != null)
                         {
-                            Debug.WriteLine($"Item {i+1}: {searchResults.tracks.items[i].name} by {string.Join(", ", searchResults.tracks.items[i].artists.Select(a => a.name))}");
-                        }
+                            Debug.WriteLine($"Search results for {musicInfo.Title}: {searchResults.tracks.items.Count} items found.");
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Debug.WriteLine($"Item {i + 1}: {searchResults.tracks.items[i].name} by {string.Join(", ", searchResults.tracks.items[i].artists.Select(a => a.name))}");
+                            }
 
-                        Debug.WriteLine("Adding search results to Data.SearchList...");
-                        Data.SearchList.Add(searchResults);
+                            Debug.WriteLine("Adding search results to Data.SearchList...");
+                            Data.SearchList.Add(searchResults);
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"SpotifyToken missing. spotifyToken: {Data.SpotifyToken}");
                     }
                 }
             }
