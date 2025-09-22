@@ -7,7 +7,7 @@ using TagLib;
 
 namespace LocalToSpotify
 {
-    public class MusicFile
+    public class MusicInfo
     {
         public string Title { get; }
         public string Artist { get; }
@@ -15,7 +15,7 @@ namespace LocalToSpotify
         public string Filepath { get; }
         // public Picture? Cover { get; }
 
-        public MusicFile(string title, string artist, string album, string filepath)
+        public MusicInfo(string title, string artist, string album, string filepath)
         {
             this.Title = title;
             this.Artist = artist;
@@ -27,12 +27,12 @@ namespace LocalToSpotify
 
     public class MusicList
     {
-        public List<MusicFile> Songs { get; }
+        public List<MusicInfo> Songs { get; }
         public MusicList()
         {
-            Songs = new List<MusicFile>();
+            Songs = new List<MusicInfo>();
         }
-        public void AddFile(MusicFile file)
+        public void AddFile(MusicInfo file)
         {
             Songs.Add(file);
         }
