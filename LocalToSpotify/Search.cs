@@ -15,16 +15,18 @@ namespace LocalToSpotify
     {
         private HttpClient client = new HttpClient();
 
-        internal async Task<SpotifySearchResponse> SearchSong(string spotifyToken, string title, string artist, string album)
+        // Return json response from searching a song through Spotify API
+        internal async Task<SpotifySearchResponse> SearchSong(string spotifyToken, MusicInfo info)
         {
             try
             {
+                // Search query through spotify API
                 StringBuilder sb = new StringBuilder("https://api.spotify.com/v1/search?q=");
-                sb.Append(title);
+                sb.Append(info.Title);
                 sb.Append("+");
-                sb.Append(artist);
+                sb.Append(info.Artist);
                 sb.Append("+");
-                sb.Append(album);
+                sb.Append(info.Album);
                 sb.Append("&type=track&limit=3");
 
                 // Set the authorization header with your access token
@@ -38,7 +40,8 @@ namespace LocalToSpotify
                     var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
                     SpotifySearchResponse spotifySearch = JsonConvert.DeserializeObject<SpotifySearchResponse>(response.ToString());
 
-                    foreach(var item in spotifySearch.tracks.items)
+                    // Debug output of search results
+                    foreach (var item in spotifySearch.tracks.items)
                     {
                         Debug.WriteLine(item.name + " by " + item.artists);
                     }
