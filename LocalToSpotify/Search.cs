@@ -24,9 +24,9 @@ namespace LocalToSpotify
                 // Search query through spotify API
                 StringBuilder sb = new StringBuilder("https://api.spotify.com/v1/search?q=");
                 sb.Append(info.Title);
-                sb.Append("+");
+                sb.Append("%2B");
                 sb.Append(info.Artist);
-                sb.Append("+");
+                sb.Append("%2B");
                 sb.Append(info.Album);
                 sb.Append("&type=track&limit=3");
 
