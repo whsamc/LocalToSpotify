@@ -34,7 +34,7 @@ namespace LocalToSpotify
         }
 
         // ObservableCollection needs to be a property to properly data bind
-        public ObservableCollection<MusicFile> MusicList { get; set; } = new ObservableCollection<MusicFile>();
+        public ObservableCollection<MusicInfo> MusicList { get; set; } = new ObservableCollection<MusicInfo>();
 
         private List<string> MusicFilePathList = new List<string>();
 
@@ -49,37 +49,50 @@ namespace LocalToSpotify
             ".aac"
         };
 
+        private void FindInSpotify(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("ReadThroughFiles called");
+            ReadThroughFiles(sender, e);
+        }
+
         // Get the music file paths for the folder
-        private void ReadThroughFiles(object sender, RoutedEventArgs e)
+        private async void ReadThroughFiles(object sender, RoutedEventArgs e)
         {
             // Return if FileDirectory is null
             if (FileDirectory == null) return;
 
+            Debug.WriteLine("Clearing previous data...");
             MusicFilePathList.Clear();
             MusicList.Clear();
 
+            Debug.WriteLine("Trimming filepath string...");
             // trim quotation marks
             FileDirectory = FileDirectory.Trim('"');
 
             // If the path is actually just a file
             if (System.IO.File.Exists(FileDirectory))
             {
+                Debug.WriteLine("File path is a single file. Adding to list...");
                 // Add single item to the list because of the parse method later
                 MusicFilePathList.Add(FileDirectory);
             }
             // If the path is a directory
             else
             {
+                Debug.WriteLine("File path is a directory. Searching for music files... Adding to file path list...");
                 // get file paths for all music files inside folder
                 MusicFilePathList = Directory.GetFiles(FileDirectory, "*", SearchOption.AllDirectories).ToList();
             }
 
+            Debug.WriteLine("Iterating through music file paths list...");
             // Iterate through list and parse metadata from each filepath
             foreach (var MusicFilePath in MusicFilePathList)
             {
+                Debug.WriteLine("Checking file type...");
                 // Check the file type with fileExtensions hashset
                 if (fileExtensions.Contains(Path.GetExtension(MusicFilePath)))
                 {
+                    Debug.WriteLine("File type supported. Parsing music file and adding to music list...");
                     AddToMusicList(ParseMusicFile(MusicFilePath));
                 }
             }
@@ -87,9 +100,22 @@ namespace LocalToSpotify
             try
             {
                 Search search = new Search();
+                
+                foreach(MusicInfo musicInfo in MusicList)
+                {
+                    // Search using spotify api and return its search results
+                    var searchResults = await search.SearchSong(Data.SpotifyToken, musicInfo);
+                    if (searchResults != null)
+                    {
+                        Debug.WriteLine($"Search results for {musicInfo.Title}: {searchResults.tracks.items.Count} items found.");
+                        for(int i = 0; i < 3; i++)
+                        {
+                            Debug.WriteLine($"Item {i+1}: {searchResults.tracks.items[i].name} by {string.Join(", ", searchResults.tracks.items[i].artists.Select(a => a.name))}");
+                        }
 
-                // Search using spotify api and return its search results
-                // search.SearchSong();
+                        Data.SearchList.Add(searchResults);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -98,7 +124,7 @@ namespace LocalToSpotify
         }
 
         // Parse the metadata for the music file
-        private MusicFile ParseMusicFile(string filePath)
+        private MusicInfo ParseMusicFile(string filePath)
         {
             // trim the string of quotation marks
             var path = filePath.Trim('"');
@@ -106,22 +132,26 @@ namespace LocalToSpotify
             // Try to create a MusicFile object with metadata properties
             try
             {
+                Debug.WriteLine("Creating TagLib file object...");
                 // File to open
                 var file = TagLib.File.Create(@path);
 
+                Debug.WriteLine("Creating MusicInfo object containing metadata");
                 // Create musicfile object
-                return new MusicFile(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath);
+                return new MusicInfo(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath);
             }
 
             // Catch wrong format exceptions
             catch (UnsupportedFormatException e)
             {
-                return new MusicFile("", "", "", filePath);
+                Debug.WriteLine("UnsupportedFormatException: " + e.Message);
+                return new MusicInfo("", "", "", filePath);
             }
         }
 
-        private void AddToMusicList(MusicFile song)
+        private void AddToMusicList(MusicInfo song)
         {
+            Debug.WriteLine("Adding MusicInfo object to MusicList observable collection...");
             MusicList.Add(song);
         }
 
