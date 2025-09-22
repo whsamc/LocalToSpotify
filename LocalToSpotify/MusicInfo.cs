@@ -13,6 +13,10 @@ namespace LocalToSpotify
         public string Artist { get; }
         public string Album { get; }
         public string Filepath { get; }
+
+        public string QueryTitle { get; set; }
+        public string QueryArtist { get; set; }
+        public string QueryAlbum { get; set; }
         // public Picture? Cover { get; }
 
         public MusicInfo(string title, string artist, string album, string filepath)
@@ -22,6 +26,15 @@ namespace LocalToSpotify
             this.Album = album;
             // this.Cover = cover;
             this.Filepath = filepath;
+
+            ConvertMetadataToQueryable();
+        }
+
+        internal void ConvertMetadataToQueryable()
+        {
+            this.QueryTitle = Title.Replace(' ', '+');
+            this.QueryArtist = Artist.Replace(' ', '+');
+            this.QueryAlbum = Album.Replace(' ', '+');
         }
     }
 
