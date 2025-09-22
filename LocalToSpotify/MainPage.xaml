@@ -42,7 +42,7 @@
                 <Button
                 x:Name="ScanBtn"
                 Content="Scan" 
-                Click="ReadThroughFiles"
+                Click="FindInSpotify"
                 HorizontalAlignment="Center"
                 MaxWidth="150"
                 FontFamily="Helvetica"
