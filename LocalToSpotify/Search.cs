@@ -23,11 +23,11 @@ namespace LocalToSpotify
                 Debug.WriteLine("Building search query...");
                 // Search query through spotify API
                 StringBuilder sb = new StringBuilder("https://api.spotify.com/v1/search?q=");
-                sb.Append(info.Title);
+                sb.Append(info.QueryTitle);
                 sb.Append("%2B");
-                sb.Append(info.Artist);
+                sb.Append(info.QueryArtist);
                 sb.Append("%2B");
-                sb.Append(info.Album);
+                sb.Append(info.QueryAlbum);
                 sb.Append("&type=track&limit=3");
 
                 Debug.WriteLine("Adjusting search query parameters...");
@@ -47,7 +47,7 @@ namespace LocalToSpotify
                         var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
 
                         Debug.WriteLine("Deserializing JSON response into SpotifySearchResponse object...");
-                        SpotifySearchResponse spotifySearch = JsonConvert.DeserializeObject<SpotifySearchResponse>(response.ToString());
+                        SpotifySearchResponse spotifySearch = JsonConvert.DeserializeObject<SpotifySearchResponse>(jsonResponse.ToString());
 
                         Debug.WriteLine($"{info.Title} by {info.Artist} Results:");
                         // Debug output of search results
