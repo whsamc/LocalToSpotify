@@ -230,14 +230,16 @@ namespace LocalToSpotify
                     tokenRequestParams.GrantType = "refresh_token";
                     TokenRequestResult tokenRequestResult = await OAuth2Manager.RequestTokenAsync(new Uri(tokenUriString), tokenRequestParams);
 
-
                     // Check if the token request was successful. If so, use the access token to get the user profile
+                    // Also encrypt new refresh token and save it to file
                     if (tokenRequestResult.Response != null)
                     {
                         string spotifyToken = tokenRequestResult.Response.AccessToken;
                         string newRefreshToken = tokenRequestResult.Response.RefreshToken; // Get the new refresh token
 
                         await encrypt.EncryptStringToFile(newRefreshToken); // Encrypt the new refresh token and save it to a file
+
+                        Data.SpotifyToken = spotifyToken; // Update the spotify token in the Data singleton
 
                         // Get authorization from spotify with token
                         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
@@ -250,7 +252,7 @@ namespace LocalToSpotify
                         // Bind the user profile to the MainPage variable userProfile
                         Data.UserProfile = apiresponse;
 
-                        // To refresh the page with the new user profile data. TEMPORARY
+                        // To refresh the page with the new user profile data. TEMPORARY WORKAROUND
                         App.rootFrame.Navigate(typeof(MainPage), App.mainPage);
                     }
                 }
