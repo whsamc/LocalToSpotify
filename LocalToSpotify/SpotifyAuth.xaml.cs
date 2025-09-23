@@ -234,12 +234,11 @@ namespace LocalToSpotify
                     // Also encrypt new refresh token and save it to file
                     if (tokenRequestResult.Response != null)
                     {
-                        string spotifyToken = tokenRequestResult.Response.AccessToken;
+                        string spotifyToken = tokenRequestResult.Response.AccessToken;  // Get access token to use in api calls
                         string newRefreshToken = tokenRequestResult.Response.RefreshToken; // Get the new refresh token
 
                         await encrypt.EncryptStringToFile(newRefreshToken); // Encrypt the new refresh token and save it to a file
-
-                        Data.SpotifyToken = spotifyToken; // Update the spotify token in the Data singleton
+                        Data.SpotifyToken = spotifyToken; // Update the access token in the Data singleton
 
                         // Get authorization from spotify with token
                         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
