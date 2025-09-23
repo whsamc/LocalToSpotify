@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -188,6 +189,29 @@ namespace LocalToSpotify
                 Debug.WriteLine("No data for UserProfile.display_name");
             }
             Debug.WriteLine("Navigated to MainPage");
+        }
+
+        // Method to add display elements for search results
+        private void DisplaySearchResults(string title, string artist, string album)
+        {
+            // Gridview to house the results that can be selected
+            GridView gridView = new GridView();
+
+            // Title Header Block
+            TextBlock textBlockTitleHeader = new TextBlock();
+            textBlockTitleHeader.Text = "Title";
+            textBlockTitleHeader.IsTextSelectionEnabled = true;
+            textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+
+            // Title Value Block
+            TextBlock textBlockTitleValue = new TextBlock();
+            textBlockTitleValue.Text = $"{title}";
+            textBlockTitleValue.IsTextSelectionEnabled = true;
+
+
+            // Add TextBlock to the visual tree
+            
+            // MainPageGrid.Children.Add(textBlock);
         }
     }
 }
