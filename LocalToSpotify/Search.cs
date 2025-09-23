@@ -53,7 +53,7 @@ namespace LocalToSpotify
                         // Debug output of search results
                         foreach (var item in spotifySearch.tracks.items)
                         {
-                            Debug.WriteLine(item.name + " by " + item.artists);
+                            Debug.WriteLine(item.name + " by " + item.artists.First().name);
                         }
 
                         return spotifySearch;
