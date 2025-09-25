@@ -54,6 +54,14 @@ namespace LocalToSpotify
         {
             Debug.WriteLine("ReadThroughFiles called");
             ReadThroughFiles(sender, e);
+            foreach(var searchResponse in Data.SearchList)
+            {
+                string title = searchResponse.tracks.items[0].name;
+                string artist = searchResponse.tracks.items[0].artists[0].name;
+                string album = searchResponse.tracks.items[0].album.name;
+
+                DisplaySearchResults(title, artist, album);
+            }
         }
 
         // Get the music file paths for the folder
@@ -192,26 +200,60 @@ namespace LocalToSpotify
         }
 
         // Method to add display elements for search results
-        private void DisplaySearchResults(string title, string artist, string album)
+        internal void DisplaySearchResults(string title, string artist, string album)
         {
-            // Gridview to house the results that can be selected
-            GridView gridView = new GridView();
+            try
+            {
+                Debug.WriteLine("Creating textblocks to display search results...");
 
-            // Title Header Block
-            TextBlock textBlockTitleHeader = new TextBlock();
-            textBlockTitleHeader.Text = "Title";
-            textBlockTitleHeader.IsTextSelectionEnabled = true;
-            textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                // Gridview to house the results that can be selected
+                GridView gridView = new GridView();
 
-            // Title Value Block
-            TextBlock textBlockTitleValue = new TextBlock();
-            textBlockTitleValue.Text = $"{title}";
-            textBlockTitleValue.IsTextSelectionEnabled = true;
+                // Title Header Block
+                TextBlock textBlockTitleHeader = new TextBlock();
+                textBlockTitleHeader.Text = "Title";
+                textBlockTitleHeader.IsTextSelectionEnabled = true;
+                textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                // Title Value Block
+                TextBlock textBlockTitleValue = new TextBlock();
+                textBlockTitleValue.Text = $"{title}";
+                textBlockTitleValue.IsTextSelectionEnabled = true;
 
 
-            // Add TextBlock to the visual tree
-            
-            // MainPageGrid.Children.Add(textBlock);
+                // Artist Header Block
+                TextBlock textBlockArtistHeader = new TextBlock();
+                textBlockArtistHeader.Text = "Artist";
+                textBlockArtistHeader.IsTextSelectionEnabled = true;
+                textBlockArtistHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                // Artist Value Block
+                TextBlock textBlockArtistValue = new TextBlock();
+                textBlockArtistValue.Text = $"{artist}";
+                textBlockArtistValue.IsTextSelectionEnabled = true;
+
+
+                // Album Header Block
+                TextBlock textBlockAlbumHeader = new TextBlock();
+                textBlockAlbumHeader.Text = "Artist";
+                textBlockAlbumHeader.IsTextSelectionEnabled = true;
+                textBlockAlbumHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                // Album Value Block
+                TextBlock textBlockAlbumValue = new TextBlock();
+                textBlockAlbumValue.Text = $"{artist}";
+                textBlockAlbumValue.IsTextSelectionEnabled = true;
+
+
+                // Add TextBlocks to the visual tree
+                GridDisplayView.Children.Add(textBlockTitleHeader);
+                GridDisplayView.Children.Add(textBlockTitleValue);
+                GridDisplayView.Children.Add(textBlockArtistHeader);
+                GridDisplayView.Children.Add(textBlockArtistValue);
+                GridDisplayView.Children.Add(textBlockAlbumHeader);
+                GridDisplayView.Children.Add(textBlockAlbumValue);
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"Error displaying search results for {title} by {artist}: {ex.Message}");
+            }
         }
     }
 }
