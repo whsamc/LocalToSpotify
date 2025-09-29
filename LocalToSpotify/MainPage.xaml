@@ -14,8 +14,7 @@
         <ScrollView>
             <StackPanel          
                 Padding="30,0"
-                Spacing="25"
-            >
+                Spacing="25">
 
                 <!-- Static Elements -->
                 <Image Source="settings_cog.png"/>
@@ -64,18 +63,25 @@
                 FontWeight="Bold"
                 FontSize="24"/>
 
-                <!-- Dynamic Elements -->
-                <GridView Name="GridDisplayView1">
-                    <Grid Name ="SearchResultsUIHeaders"
-                          Width="120">
-                    </Grid>
-                </GridView>
-                
-                <GridView Name="GridDisplayView2">
-                    <Grid Name ="SearchResultsUIValues"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <!-- Dynamic Elements -->
+                    <GridView Name="GridDisplayView1"
+                              Grid.Column="0">
+                        <Grid Name ="SearchResultsUIHeaders">
+                        </Grid>
+                    </GridView>
+
+                    <GridView Name="GridDisplayView2"
+                              Grid.Column="1">
+                        <Grid Name ="SearchResultsUIValues"
                           Width="Auto">
-                    </Grid>
-                </GridView>
+                        </Grid>
+                    </GridView>
+                </Grid>
             </StackPanel>
         </ScrollView>
     </Grid>
