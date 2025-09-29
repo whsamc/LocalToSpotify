@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using TagLib;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -52,20 +53,47 @@ namespace LocalToSpotify
 
         private void FindInSpotify(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("ReadThroughFiles called");
-            ReadThroughFiles(sender, e);
-            foreach(var searchResponse in Data.SearchList)
+            Debug.WriteLine("FindInSpotify called");
+            ReadThroughFiles();
+
+            Debug.WriteLine("Finished Reading through files and searching in Spotify");
+            int row = 0;
+            SearchResultsUIHeaders.RowDefinitions.Clear();
+            SearchResultsUIValues.RowDefinitions.Clear();
+            foreach (var searchResponse in Data.SearchList)
             {
+                Debug.WriteLine("Attempting to add UI for search result");
                 string title = searchResponse.tracks.items[0].name;
                 string artist = searchResponse.tracks.items[0].artists[0].name;
                 string album = searchResponse.tracks.items[0].album.name;
 
-                DisplaySearchResults(title, artist, album);
+                DisplaySearchResults(title, artist, album, row);
+                row += 3;
+            }
+        }
+
+        private void LoadResults(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("LoadResults called");
+            int row = 0;
+            foreach (var searchResponse in Data.SearchList)
+            {
+                // Adding new row definitions for each result
+                SearchResultsUIHeaders.RowDefinitions.Add(new RowDefinition());
+                SearchResultsUIValues.RowDefinitions.Add(new RowDefinition());
+
+                Debug.WriteLine("Attempting to add UI for search result");
+
+                string title = searchResponse.tracks.items[0].name;
+                string artist = searchResponse.tracks.items[0].artists[0].name;
+                string album = searchResponse.tracks.items[0].album.name;
+                DisplaySearchResults(title, artist, album, row);
+                row += 3;
             }
         }
 
         // Get the music file paths for the folder
-        private async void ReadThroughFiles(object sender, RoutedEventArgs e)
+        private async void ReadThroughFiles()
         {
             // Return if FileDirectory is null
             if (FileDirectory == null) return;
@@ -200,55 +228,82 @@ namespace LocalToSpotify
         }
 
         // Method to add display elements for search results
-        internal void DisplaySearchResults(string title, string artist, string album)
+        private void DisplaySearchResults(string title, string artist, string album, int row)
         {
             try
             {
                 Debug.WriteLine("Creating textblocks to display search results...");
-
-                // Gridview to house the results that can be selected
-                GridView gridView = new GridView();
 
                 // Title Header Block
                 TextBlock textBlockTitleHeader = new TextBlock();
                 textBlockTitleHeader.Text = "Title";
                 textBlockTitleHeader.IsTextSelectionEnabled = true;
                 textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                textBlockTitleHeader.Margin = new Thickness(0, 5, 0, 0);
+                textBlockTitleHeader.HorizontalAlignment.Equals(HorizontalAlignment.Right);
                 // Title Value Block
                 TextBlock textBlockTitleValue = new TextBlock();
                 textBlockTitleValue.Text = $"{title}";
                 textBlockTitleValue.IsTextSelectionEnabled = true;
-
+                textBlockTitleValue.Margin = new Thickness(0, 5, 0, 0);
+                textBlockTitleValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
 
                 // Artist Header Block
                 TextBlock textBlockArtistHeader = new TextBlock();
                 textBlockArtistHeader.Text = "Artist";
                 textBlockArtistHeader.IsTextSelectionEnabled = true;
                 textBlockArtistHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                textBlockArtistHeader.Margin = new Thickness(0, 5, 0, 0);
+                textBlockArtistHeader.HorizontalAlignment.Equals(HorizontalAlignment.Right);
                 // Artist Value Block
                 TextBlock textBlockArtistValue = new TextBlock();
                 textBlockArtistValue.Text = $"{artist}";
                 textBlockArtistValue.IsTextSelectionEnabled = true;
+                textBlockArtistValue.Margin = new Thickness(0, 5, 0, 0);
+                textBlockArtistValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
 
 
                 // Album Header Block
                 TextBlock textBlockAlbumHeader = new TextBlock();
-                textBlockAlbumHeader.Text = "Artist";
+                textBlockAlbumHeader.Text = "Album";
                 textBlockAlbumHeader.IsTextSelectionEnabled = true;
                 textBlockAlbumHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
+                textBlockAlbumHeader.Margin = new Thickness(0, 5, 0, 20);
+                textBlockArtistHeader.HorizontalAlignment.Equals(HorizontalAlignment.Right);
                 // Album Value Block
                 TextBlock textBlockAlbumValue = new TextBlock();
-                textBlockAlbumValue.Text = $"{artist}";
+                textBlockAlbumValue.Text = $"{album}";
                 textBlockAlbumValue.IsTextSelectionEnabled = true;
+                textBlockAlbumValue.Margin = new Thickness(0, 5, 0, 20);
+                textBlockAlbumValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
 
 
                 // Add TextBlocks to the visual tree
-                GridDisplayView.Children.Add(textBlockTitleHeader);
-                GridDisplayView.Children.Add(textBlockTitleValue);
-                GridDisplayView.Children.Add(textBlockArtistHeader);
-                GridDisplayView.Children.Add(textBlockArtistValue);
-                GridDisplayView.Children.Add(textBlockAlbumHeader);
-                GridDisplayView.Children.Add(textBlockAlbumValue);
+                SearchResultsUIHeaders.Children.Add(textBlockTitleHeader);
+                SearchResultsUIHeaders.Children.Add(textBlockArtistHeader);
+                SearchResultsUIHeaders.Children.Add(textBlockAlbumHeader);
+
+                Grid.SetColumn(textBlockTitleHeader, 0);
+                Grid.SetColumn(textBlockArtistHeader, 0);
+                Grid.SetColumn(textBlockAlbumHeader, 0);
+
+                Grid.SetRow(textBlockTitleHeader, row);
+                Grid.SetRow(textBlockArtistHeader, row + 1);
+                Grid.SetRow(textBlockAlbumHeader, row + 2);
+
+                SearchResultsUIValues.Children.Add(textBlockTitleValue);
+                SearchResultsUIValues.Children.Add(textBlockArtistValue);
+                SearchResultsUIValues.Children.Add(textBlockAlbumValue);
+
+                Grid.SetColumn(textBlockTitleValue, 1);
+                Grid.SetColumn(textBlockArtistValue, 1);
+                Grid.SetColumn(textBlockAlbumValue, 1);
+
+                Grid.SetRow(textBlockTitleValue, row);
+                Grid.SetRow(textBlockArtistValue, row + 1);
+                Grid.SetRow(textBlockAlbumValue, row + 2);
+
+                // InitializeComponent();
             }
             catch(Exception ex)
             {

@@ -15,7 +15,7 @@
             <StackPanel          
                 Padding="30,0"
                 Spacing="25"
-                >
+            >
 
                 <!-- Static Elements -->
                 <Image Source="settings_cog.png"/>
@@ -26,11 +26,16 @@
                 Click="SpotifyAuthPageButton_Clicked"
                 HorizontalAlignment="Right"
                 Background="Transparent"
-                MaxHeight="50"
-                    />
+                MaxHeight="50"/>
 
                 <TextBlock
                 Text="Local to Spotify App"/>
+
+                <TextBlock 
+                Name="displayNameTextBlock"
+                Text="{x:Bind Data.UserProfile.display_name}"
+                FontWeight="Bold"
+                Margin="50,0"/>
 
                 <TextBox
                 x:Name="musicFileInput"
@@ -49,29 +54,28 @@
                 FontWeight="Bold"
                 FontSize="24"/>
 
+                <Button
+                x:Name="LoadBtn"
+                Content="Load" 
+                Click="LoadResults"
+                HorizontalAlignment="Center"
+                MaxWidth="150"
+                FontFamily="Helvetica"
+                FontWeight="Bold"
+                FontSize="24"/>
+
                 <!-- Dynamic Elements -->
-
-                <Grid Name="GridDisplayView"
-                      Margin="20,20,20,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="3"
-                          Margin="10, 10, 0, 5">
-
-                        <TextBlock 
-                            Name="displayNameTextBlock"
-                            Text="{x:Bind Data.UserProfile.display_name}"
-                            FontWeight="Bold"
-                            Margin="50,0"
-                        />
+                <GridView Name="GridDisplayView1">
+                    <Grid Name ="SearchResultsUIHeaders"
+                          Width="120">
                     </Grid>
-                </Grid>
-                <TextBlock Text="Bottom: Testing"
-                   HorizontalAlignment="Center"/>
-
+                </GridView>
+                
+                <GridView Name="GridDisplayView2">
+                    <Grid Name ="SearchResultsUIValues"
+                          Width="Auto">
+                    </Grid>
+                </GridView>
             </StackPanel>
         </ScrollView>
     </Grid>
