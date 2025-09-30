@@ -58,8 +58,11 @@ namespace LocalToSpotify
 
             Debug.WriteLine("Finished Reading through files and searching in Spotify");
             int row = 0;
-            SearchResultsUIHeaders.RowDefinitions.Clear();
-            SearchResultsUIValues.RowDefinitions.Clear();
+            // Clear the previous search results from the UI
+            GridDisplayView1.Items.Clear();
+            GridDisplayView2.Items.Clear();
+
+            // Iterate through the search results and display them in the UI
             foreach (var searchResponse in Data.SearchList)
             {
                 Debug.WriteLine("Attempting to add UI for search result");
@@ -76,12 +79,13 @@ namespace LocalToSpotify
         {
             Debug.WriteLine("LoadResults called");
             int row = 0;
+
+            // Clear the previous search results from the UI
+            GridDisplayView1.Items.Clear();
+            GridDisplayView2.Items.Clear();
+
             foreach (var searchResponse in Data.SearchList)
             {
-                // Adding new row definitions for each result
-                SearchResultsUIHeaders.RowDefinitions.Add(new RowDefinition());
-                SearchResultsUIValues.RowDefinitions.Add(new RowDefinition());
-
                 Debug.WriteLine("Attempting to add UI for search result");
 
                 string title = searchResponse.tracks.items[0].name;
@@ -232,7 +236,18 @@ namespace LocalToSpotify
         {
             try
             {
-                Debug.WriteLine("Creating textblocks to display search results...");
+                Debug.WriteLine("Creating textblocks in new Grid to display search results...");
+
+                StackPanel searchResultUIHeaders = new StackPanel();
+                StackPanel searchResultUIValues = new StackPanel();
+
+
+                GridDisplayView1.Items.Add(searchResultUIHeaders);
+                GridDisplayView2.Items.Add(searchResultUIValues);
+
+                // Set the alignment for the grids
+                searchResultUIHeaders.HorizontalAlignment = HorizontalAlignment.Right;
+                searchResultUIValues.HorizontalAlignment = HorizontalAlignment.Left;
 
                 // Title Header Block
                 TextBlock textBlockTitleHeader = new TextBlock();
@@ -241,6 +256,7 @@ namespace LocalToSpotify
                 textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
                 textBlockTitleHeader.Margin = new Thickness(0, 5, 0, 0);
                 textBlockTitleHeader.HorizontalAlignment.Equals(HorizontalAlignment.Right);
+                textBlockTitleHeader.TextAlignment.Equals(TextAlignment.Right);
                 // Title Value Block
                 TextBlock textBlockTitleValue = new TextBlock();
                 textBlockTitleValue.Text = $"{title}";
@@ -279,25 +295,17 @@ namespace LocalToSpotify
 
 
                 // Add TextBlocks to the visual tree
-                SearchResultsUIHeaders.Children.Add(textBlockTitleHeader);
-                SearchResultsUIHeaders.Children.Add(textBlockArtistHeader);
-                SearchResultsUIHeaders.Children.Add(textBlockAlbumHeader);
-
-                Grid.SetColumn(textBlockTitleHeader, 0);
-                Grid.SetColumn(textBlockArtistHeader, 0);
-                Grid.SetColumn(textBlockAlbumHeader, 0);
+                searchResultUIHeaders.Children.Add(textBlockTitleHeader);
+                searchResultUIHeaders.Children.Add(textBlockArtistHeader);
+                searchResultUIHeaders.Children.Add(textBlockAlbumHeader);
 
                 Grid.SetRow(textBlockTitleHeader, row);
                 Grid.SetRow(textBlockArtistHeader, row + 1);
                 Grid.SetRow(textBlockAlbumHeader, row + 2);
 
-                SearchResultsUIValues.Children.Add(textBlockTitleValue);
-                SearchResultsUIValues.Children.Add(textBlockArtistValue);
-                SearchResultsUIValues.Children.Add(textBlockAlbumValue);
-
-                Grid.SetColumn(textBlockTitleValue, 1);
-                Grid.SetColumn(textBlockArtistValue, 1);
-                Grid.SetColumn(textBlockAlbumValue, 1);
+                searchResultUIValues.Children.Add(textBlockTitleValue);
+                searchResultUIValues.Children.Add(textBlockArtistValue);
+                searchResultUIValues.Children.Add(textBlockAlbumValue);
 
                 Grid.SetRow(textBlockTitleValue, row);
                 Grid.SetRow(textBlockArtistValue, row + 1);

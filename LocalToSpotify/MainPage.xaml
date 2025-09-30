@@ -70,16 +70,23 @@
                     </Grid.ColumnDefinitions>
                     <!-- Dynamic Elements -->
                     <GridView Name="GridDisplayView1"
-                              Grid.Column="0">
-                        <Grid Name ="SearchResultsUIHeaders">
-                        </Grid>
+                              Grid.Column="0"
+                              IsItemClickEnabled="False"
+                              SelectionMode="None">
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:Name="SearchResultUIHeaders">
+                                
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
                     </GridView>
 
                     <GridView Name="GridDisplayView2"
                               Grid.Column="1">
-                        <Grid Name ="SearchResultsUIValues"
-                          Width="Auto">
-                        </Grid>
                     </GridView>
                 </Grid>
             </StackPanel>
