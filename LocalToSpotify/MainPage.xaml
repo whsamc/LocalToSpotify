@@ -68,12 +68,14 @@
                                 <Grid AutomationProperties.Name="{x:Bind Title}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width= '*'/>
+                                        <ColumnDefinition Width= "*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image
                                         Source="{x:Bind MusicCover}"
                                         Height="100"
-                                        Stretch="Fill"/>
+                                        Stretch="Fill"
+                                        VerticalAlignment="Top"
+                                        Grid.Column="0"/>
                                     <StackPanel
                                         Grid.Column="1"
                                         Margin= '8,0,0,8'>
