@@ -53,16 +53,6 @@
                 FontWeight="Bold"
                 FontSize="24"/>
 
-                <Button
-                x:Name="LoadBtn"
-                Content="Load" 
-                Click="LoadResults"
-                HorizontalAlignment="Center"
-                MaxWidth="150"
-                FontFamily="Helvetica"
-                FontWeight="Bold"
-                FontSize="24"/>
-
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
@@ -74,8 +64,32 @@
                               IsItemClickEnabled="False"
                               SelectionMode="None">
                         <GridView.ItemTemplate>
-                            <DataTemplate x:Name="SearchResultUIHeaders">
-                                
+                            <DataTemplate x:Name="originalFile" x:DataType="local:MusicInfo">
+                                <Grid AutomationProperties.Name="{x:Bind Title}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width= '*'/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image
+                                        Source="{x:Bind MusicCover}"
+                                        Height="100"
+                                        Stretch="Fill"/>
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin= '8,0,0,8'>
+                                        <TextBlock
+                                            Text="{x:Bind Title}"
+                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                        <StackPanel>
+                                            <TextBlock
+                                                Text="{x:Bind Artist}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                            <TextBlock
+                                                Text="{x:Bind Album}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                         <GridView.ItemsPanel>

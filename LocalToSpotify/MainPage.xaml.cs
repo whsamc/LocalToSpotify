@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,6 @@ namespace LocalToSpotify
             ReadThroughFiles();
 
             Debug.WriteLine("Finished Reading through files and searching in Spotify");
-            int row = 0;
             // Clear the previous search results from the UI
             GridDisplayView1.Items.Clear();
             GridDisplayView2.Items.Clear();
@@ -69,30 +69,6 @@ namespace LocalToSpotify
                 string title = searchResponse.tracks.items[0].name;
                 string artist = searchResponse.tracks.items[0].artists[0].name;
                 string album = searchResponse.tracks.items[0].album.name;
-
-                DisplaySearchResults(title, artist, album, row);
-                row += 3;
-            }
-        }
-
-        private void LoadResults(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("LoadResults called");
-            int row = 0;
-
-            // Clear the previous search results from the UI
-            GridDisplayView1.Items.Clear();
-            GridDisplayView2.Items.Clear();
-
-            foreach (var searchResponse in Data.SearchList)
-            {
-                Debug.WriteLine("Attempting to add UI for search result");
-
-                string title = searchResponse.tracks.items[0].name;
-                string artist = searchResponse.tracks.items[0].artists[0].name;
-                string album = searchResponse.tracks.items[0].album.name;
-                DisplaySearchResults(title, artist, album, row);
-                row += 3;
             }
         }
 
@@ -134,7 +110,7 @@ namespace LocalToSpotify
                 if (fileExtensions.Contains(Path.GetExtension(MusicFilePath)))
                 {
                     Debug.WriteLine("File type supported. Parsing music file and adding to music list...");
-                    AddToMusicList(ParseMusicFile(MusicFilePath));
+                    AddToMusicList(await ParseMusicFile(MusicFilePath));
                 }
             }
 
@@ -157,6 +133,14 @@ namespace LocalToSpotify
                                 Debug.WriteLine($"Item {i + 1}: {searchResults.tracks.items[i].name} by {string.Join(", ", searchResults.tracks.items[i].artists.Select(a => a.name))}");
                             }
 
+                            // Display the search result in the UI
+                            string title = searchResults.tracks.items[0].name;
+                            string artist = searchResults.tracks.items[0].artists[0].name;
+                            string album = searchResults.tracks.items[0].album.name;
+                            
+                            DisplayUI(musicInfo, title, artist, album);
+                            //DisplaySearchResults(musicInfo, title, artist, album);
+
                             Debug.WriteLine("Adding search results to Data.SearchList...");
                             Data.SearchList.Add(searchResults);
                         }
@@ -174,7 +158,7 @@ namespace LocalToSpotify
         }
 
         // Parse the metadata for the music file
-        private MusicInfo ParseMusicFile(string filePath)
+        private async Task<MusicInfo> ParseMusicFile(string filePath)
         {
             // trim the string of quotation marks
             var path = filePath.Trim('"');
@@ -187,15 +171,24 @@ namespace LocalToSpotify
                 var file = TagLib.File.Create(@path);
 
                 Debug.WriteLine("Creating MusicInfo object containing metadata");
+
+                var image = file.Tag.Pictures.First().Data;
+                MemoryStream ms = new MemoryStream(image.Data);
+                ms.Write(image.Data, 0, image.Data.Length);
+
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.SetSource(ms.AsRandomAccessStream());
+                ImageSource imageSource = bitmapImage;
+
                 // Create musicfile object
-                return new MusicInfo(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath);
+                return new MusicInfo(file.Tag.Title, file.Tag.FirstAlbumArtist, file.Tag.Album, filePath, imageSource);
             }
 
             // Catch wrong format exceptions
             catch (UnsupportedFormatException e)
             {
                 Debug.WriteLine("UnsupportedFormatException: " + e.Message);
-                return new MusicInfo("", "", "", filePath);
+                return new MusicInfo("", "", "", filePath, null);
             }
         }
 
@@ -231,8 +224,50 @@ namespace LocalToSpotify
             Debug.WriteLine("Navigated to MainPage");
         }
 
+        private void DisplayUI(MusicInfo musicFile, string title, string artist, string album)
+        {
+            try
+            {
+                StackPanel searchResultUIValues = new StackPanel();
+
+                GridDisplayView1.Items.Add(musicFile);
+                GridDisplayView2.Items.Add(searchResultUIValues);
+
+                // Title Value Block
+                TextBlock textBlockTitleValue = new TextBlock();
+                textBlockTitleValue.Text = $"{title}";
+                textBlockTitleValue.IsTextSelectionEnabled = true;
+                textBlockTitleValue.Margin = new Thickness(0, 5, 0, 0);
+                textBlockTitleValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
+                // Artist Value Block
+                TextBlock textBlockArtistValue = new TextBlock();
+                textBlockArtistValue.Text = $"{artist}";
+                textBlockArtistValue.IsTextSelectionEnabled = true;
+                textBlockArtistValue.Margin = new Thickness(0, 5, 0, 0);
+                textBlockArtistValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
+                // Album Value Block
+                TextBlock textBlockAlbumValue = new TextBlock();
+                textBlockAlbumValue.Text = $"{album}";
+                textBlockAlbumValue.IsTextSelectionEnabled = true;
+                textBlockAlbumValue.Margin = new Thickness(0, 5, 0, 20);
+                textBlockAlbumValue.HorizontalAlignment.Equals(HorizontalAlignment.Left);
+
+                searchResultUIValues.Children.Add(textBlockTitleValue);
+                searchResultUIValues.Children.Add(textBlockArtistValue);
+                searchResultUIValues.Children.Add(textBlockAlbumValue);
+
+                Grid.SetRow(textBlockTitleValue, 0);
+                Grid.SetRow(textBlockArtistValue, 1);
+                Grid.SetRow(textBlockAlbumValue, 2);
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"Error displaying search results for {title} by {artist}: {ex.Message}");
+            }
+        }
+
         // Method to add display elements for search results
-        private void DisplaySearchResults(string title, string artist, string album, int row)
+        private void DisplaySearchResults(MusicInfo musicFile, string title, string artist, string album)
         {
             try
             {
@@ -251,7 +286,7 @@ namespace LocalToSpotify
 
                 // Title Header Block
                 TextBlock textBlockTitleHeader = new TextBlock();
-                textBlockTitleHeader.Text = "Title";
+                textBlockTitleHeader.Text = $"Title: {musicFile.Title}";
                 textBlockTitleHeader.IsTextSelectionEnabled = true;
                 textBlockTitleHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
                 textBlockTitleHeader.Margin = new Thickness(0, 5, 0, 0);
@@ -266,7 +301,7 @@ namespace LocalToSpotify
 
                 // Artist Header Block
                 TextBlock textBlockArtistHeader = new TextBlock();
-                textBlockArtistHeader.Text = "Artist";
+                textBlockArtistHeader.Text = $"Artist: {musicFile.Artist}";
                 textBlockArtistHeader.IsTextSelectionEnabled = true;
                 textBlockArtistHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
                 textBlockArtistHeader.Margin = new Thickness(0, 5, 0, 0);
@@ -281,7 +316,7 @@ namespace LocalToSpotify
 
                 // Album Header Block
                 TextBlock textBlockAlbumHeader = new TextBlock();
-                textBlockAlbumHeader.Text = "Album";
+                textBlockAlbumHeader.Text = $"Album: {musicFile.Album}";
                 textBlockAlbumHeader.IsTextSelectionEnabled = true;
                 textBlockAlbumHeader.FontWeight = Microsoft.UI.Text.FontWeights.Bold;
                 textBlockAlbumHeader.Margin = new Thickness(0, 5, 0, 20);
@@ -299,17 +334,17 @@ namespace LocalToSpotify
                 searchResultUIHeaders.Children.Add(textBlockArtistHeader);
                 searchResultUIHeaders.Children.Add(textBlockAlbumHeader);
 
-                Grid.SetRow(textBlockTitleHeader, row);
-                Grid.SetRow(textBlockArtistHeader, row + 1);
-                Grid.SetRow(textBlockAlbumHeader, row + 2);
+                Grid.SetRow(textBlockTitleHeader, 0);
+                Grid.SetRow(textBlockArtistHeader, 1);
+                Grid.SetRow(textBlockAlbumHeader, 2);
 
                 searchResultUIValues.Children.Add(textBlockTitleValue);
                 searchResultUIValues.Children.Add(textBlockArtistValue);
                 searchResultUIValues.Children.Add(textBlockAlbumValue);
 
-                Grid.SetRow(textBlockTitleValue, row);
-                Grid.SetRow(textBlockArtistValue, row + 1);
-                Grid.SetRow(textBlockAlbumValue, row + 2);
+                Grid.SetRow(textBlockTitleValue, 0);
+                Grid.SetRow(textBlockArtistValue, 1);
+                Grid.SetRow(textBlockAlbumValue, 2);
 
                 // InitializeComponent();
             }
