@@ -58,25 +58,40 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Text="Original File"
+                        Grid.Column="0"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Right"
+                        Width="500"/>
+                    <TextBlock
+                        Text="Spotify Result"
+                        Grid.Column="1"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Left"/>
+
                     <!-- Dynamic Elements -->
                     
                     <!-- Left Column -->
                     <GridView Name="GridDisplayView1"
                               Grid.Column="0"
                               IsItemClickEnabled="False"
-                              SelectionMode="None">
-                        
+                              SelectionMode="None"
+                              Margin="0,50"
+                              HorizontalAlignment="Right">
+
                         <!-- Item Template -->
                         <GridView.ItemTemplate>
                             <DataTemplate x:Name="originalFile" x:DataType="local:MusicInfo">
-                                <Grid AutomationProperties.Name="{x:Bind Title}">
+                                <Grid AutomationProperties.Name="{x:Bind Title}" Width="500">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width= "*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image
                                         Source="{x:Bind MusicCover}"
-                                        Height="100"
+                                        Height="150"
                                         Stretch="Fill"
                                         VerticalAlignment="Top"
                                         Grid.Column="0"/>
@@ -84,13 +99,12 @@
                                         Grid.Column="1"
                                         Margin= '8,0,0,8'>
                                         
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock
+                                        <TextBlock
                                             Text="{x:Bind Title}"
-                                            Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                        </StackPanel>
+                                            Style="{ThemeResource SubtitleTextBlockStyle}"
+                                            Margin="0,0,0,8"/>
 
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical">
                                             <TextBlock
                                                 Text="{x:Bind Artist}"
                                                 Style="{ThemeResource CaptionTextBlockStyle}"/>
@@ -114,53 +128,140 @@
                     
                     <!-- Right Column -->
                     <GridView Name="GridDisplayView2"
-                              Grid.Column="1">
+                              Grid.Column="1"
+                              SelectionMode="None"
+                              Margin="0,50">
                         
-                        <!-- Item Template -->
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:Name="searchResult" x:DataType="local:SpotifySearchResponse">
-                                <Grid AutomationProperties.Name="{x:Bind tracks.items[0].id}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width= "*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image
-                                        Source="{x:Bind tracks.items[0].album.images[0].url}"
-                                        Height="100"
-                                        Stretch="Fill"
-                                        VerticalAlignment="Top"
-                                        Grid.Column="0"/>
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin= '8,0,0,8'>
-                                        
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock
-                                            Text="{x:Bind tracks.items[0].name}"
-                                            Style="{ThemeResource SubtitleTextBlockStyle}"
-                                            Margin="0,0,0,8"/>
-                                        </StackPanel>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock
-                                                Text="{x:Bind tracks.items[0].artists[0].name}"
-                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                            <TextBlock
-                                                Text="{x:Bind tracks.items[0].album.name}"
-                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                        </StackPanel>
-                                        
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        
+                        <!-- Items Panel -->
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsWrapGrid Orientation="Vertical"/>
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                         
+                        <!-- Item Template -->
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:Name="searchResult" x:DataType="local:SpotifySearchResponse">
+                                <StackPanel
+                                    MinHeight="150"
+                                    MaxHeight="150"
+                                    Orientation="Vertical">
+                                    <GridView
+                                        Margin="0,0,0,0"
+                                        SelectionMode="None">
+
+                                        <!-- Panel for the individual gridviews for each result-->
+                                        <GridView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsWrapGrid MaximumRowsOrColumns="1"
+                                                               Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </GridView.ItemsPanel>
+
+                                        <!-- Result 1 -->
+                                        <Grid AutomationProperties.Name="{x:Bind tracks.items[0].id}" Width="250">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width= "*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                                Source="{x:Bind tracks.items[0].album.images[0].url}"
+                                                Height="45"
+                                                Stretch="Fill"
+                                                VerticalAlignment="Top"
+                                                Grid.Column="0"/>
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Orientation="Vertical"
+                                                Margin="8,0,0,0">
+
+                                                <TextBlock
+                                                    Text="{x:Bind tracks.items[0].name}"
+                                                    FontWeight="Bold"
+                                                    FontSize="15"/>
+
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[0].artists[0].name}"
+                                                        FontSize="10"/>
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[0].album.name}"
+                                                        FontSize="10"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+
+
+                                        <Grid AutomationProperties.Name="{x:Bind tracks.items[1].id}" Width="250">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width= "*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                                Source="{x:Bind tracks.items[1].album.images[0].url}"
+                                                Height="45"
+                                                Stretch="Fill"
+                                                VerticalAlignment="Top"
+                                                Grid.Column="0"/>
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Orientation="Vertical"
+                                                Margin="8,0,0,0">
+
+                                                <TextBlock
+                                                    Text="{x:Bind tracks.items[1].name}"
+                                                    FontWeight="Bold"
+                                                    FontSize="15"/>
+
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[1].artists[0].name}"
+                                                        FontSize="10"/>
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[1].album.name}"
+                                                        FontSize="10"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+
+
+                                        <Grid AutomationProperties.Name="{x:Bind tracks.items[2].id}" Width="250">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width= "*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                                Source="{x:Bind tracks.items[2].album.images[0].url}"
+                                                Height="45"
+                                                Stretch="Fill"
+                                                VerticalAlignment="Top"
+                                                Grid.Column="0"/>
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Orientation="Vertical"
+                                                Margin="8,0,0,0">
+
+                                                <TextBlock
+                                                    Text="{x:Bind tracks.items[2].name}"
+                                                    FontWeight="Bold"
+                                                    FontSize="15"/>
+
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[2].artists[0].name}"
+                                                        FontSize="10"/>
+                                                    <TextBlock
+                                                        Text="{x:Bind tracks.items[2].album.name}"
+                                                        FontSize="10"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+
+                                    </GridView>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+
                     </GridView>
                 </Grid>
             </StackPanel>
