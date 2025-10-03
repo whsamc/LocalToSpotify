@@ -59,10 +59,14 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <!-- Dynamic Elements -->
+                    
+                    <!-- Left Column -->
                     <GridView Name="GridDisplayView1"
                               Grid.Column="0"
                               IsItemClickEnabled="False"
                               SelectionMode="None">
+                        
+                        <!-- Item Template -->
                         <GridView.ItemTemplate>
                             <DataTemplate x:Name="originalFile" x:DataType="local:MusicInfo">
                                 <Grid AutomationProperties.Name="{x:Bind Title}">
@@ -79,10 +83,14 @@
                                     <StackPanel
                                         Grid.Column="1"
                                         Margin= '8,0,0,8'>
-                                        <TextBlock
+                                        
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
                                             Text="{x:Bind Title}"
                                             Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                        <StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Text="{x:Bind Artist}"
                                                 Style="{ThemeResource CaptionTextBlockStyle}"/>
@@ -90,19 +98,69 @@
                                                 Text="{x:Bind Album}"
                                                 Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         </StackPanel>
+                                        
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </GridView.ItemTemplate>
+                        
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsWrapGrid Orientation="Vertical"/>
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
+                        
                     </GridView>
-
+                    
+                    <!-- Right Column -->
                     <GridView Name="GridDisplayView2"
                               Grid.Column="1">
+                        
+                        <!-- Item Template -->
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:Name="searchResult" x:DataType="local:SpotifySearchResponse">
+                                <Grid AutomationProperties.Name="{x:Bind tracks.items[0].id}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width= "*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image
+                                        Source="{x:Bind tracks.items[0].album.images[0].url}"
+                                        Height="100"
+                                        Stretch="Fill"
+                                        VerticalAlignment="Top"
+                                        Grid.Column="0"/>
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin= '8,0,0,8'>
+                                        
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                            Text="{x:Bind tracks.items[0].name}"
+                                            Style="{ThemeResource SubtitleTextBlockStyle}"
+                                            Margin="0,0,0,8"/>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Text="{x:Bind tracks.items[0].artists[0].name}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                            <TextBlock
+                                                Text="{x:Bind tracks.items[0].album.name}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        </StackPanel>
+                                        
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                        
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        
                     </GridView>
                 </Grid>
             </StackPanel>
