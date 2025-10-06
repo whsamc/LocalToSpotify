@@ -24,6 +24,7 @@ namespace LocalToSpotify
 
         private string _spotifyToken = "";
         private string _fileDirectory = "";
+        private List<List<string>> _searchSelection = new List<List<string>>();
         private ObservableCollection<SpotifySearchResponse> _searchList = new ObservableCollection<SpotifySearchResponse>();
 
         private Profile _userProfile = new Profile();
@@ -65,6 +66,16 @@ namespace LocalToSpotify
             set
             {
                 _searchResponse = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public List<List<string>> SearchSelection
+        {
+            get { return _searchSelection; }
+            set
+            {
+                _searchSelection = value;
                 OnPropertyChanged();
             }
         }
