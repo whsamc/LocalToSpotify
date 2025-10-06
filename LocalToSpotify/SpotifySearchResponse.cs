@@ -11,6 +11,7 @@ namespace LocalToSpotify
     public class SpotifySearchResponse
     {
         public Tracks tracks { get; set; }
+        public int searchIndex { get; set; }
     }
 
     public class Tracks
