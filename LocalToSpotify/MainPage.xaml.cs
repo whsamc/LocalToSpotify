@@ -127,12 +127,26 @@ namespace LocalToSpotify
                 Search search = new Search();
 
                 Debug.WriteLine("Iterating through MusicList and searching Spotify for each song...");
+
+                int searchIndex = 0;
                 foreach (MusicInfo musicInfo in MusicList)
                 {
                     if (Data.SpotifyToken != null)
                     {
                         // Search using spotify api and return its search results
                         var searchResults = await search.SearchSong(Data.SpotifyToken, musicInfo);
+
+                        // Assign the search index to the search results for tracking later
+                        searchResults.searchIndex = searchIndex;
+                        searchIndex++;  // Increment search index for next iteration
+
+                        // Add the result ids for each search to a list of strings that get added to broader search list
+                        string result1 = searchResults.tracks.items[0].id;
+                        string result2 = searchResults.tracks.items[1].id;
+                        string result3 = searchResults.tracks.items[2].id;
+
+                        Data.SearchSelection.Add(new List<string>() { result1, result2, result3 });
+
                         if (searchResults != null)
                         {
                             Debug.WriteLine($"Search results for {musicInfo.Title}: {searchResults.tracks.items.Count} items found.");
@@ -239,6 +253,19 @@ namespace LocalToSpotify
         private void ReadFileDirectoryPath(object sender, TextChangedEventArgs e)
         {
             FileDirectory = musicFileInput.Text;
+        }
+
+        private void SelectItemFromSearch(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                // Data.SearchSelection[(e.AddedItems.First() as SpotifySearchResponse).searchIndex] = ;
+                Debug.WriteLine($"Selected ID: ");
+            }
+            catch
+            {
+                Debug.WriteLine($"Error upon selecting song");
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
