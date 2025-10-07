@@ -62,12 +62,14 @@
                         Grid.Column="0"
                         FontWeight="Bold"
                         HorizontalAlignment="Center"
+                        FontSize="20"
                         Width="350"/>
                     <TextBlock
                         Text="Spotify Result"
                         Grid.Column="1"
                         FontWeight="Bold"
-                        HorizontalAlignment="Center"/>
+                        HorizontalAlignment="Center"
+                        FontSize="20"/>
                 </StackPanel>
 
                 
