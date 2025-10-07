@@ -83,7 +83,7 @@
 
                     <GridView.ItemTemplate>
                         <DataTemplate x:Name="SearchResultCombinedUI" x:DataType="local:OriginalFileAndResult">
-                            <Border Background="#232733" Margin="0,0,0,0" CornerRadius="5">
+                            <Border Background="#232733" Margin="0,0,0,10" CornerRadius="5">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition></ColumnDefinition>
@@ -97,16 +97,16 @@
                                               Grid.Column="0"
                                               IsItemClickEnabled="False"
                                               SelectionMode="None"
-                                              Margin="0,50"
-                                              HorizontalAlignment="Right">
+                                              HorizontalAlignment="Right"
+                                              Padding="0,0,0,0">
 
-                                        <Border Margin="0,5,0,5">
-                                            <Grid Width="350" Margin="0,10,0,10">
+                                        <Border Margin="10,10,5,5">
+                                            <Grid Width="350" VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width= "*"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Border CornerRadius="5">
+                                                <Border CornerRadius="5" Margin="5">
                                                     <Image
                                                         Source="{x:Bind originalFile.MusicCover}"
                                                         Height="150"
@@ -142,7 +142,7 @@
                                     <GridView Name="GridDisplayView2"
                                               Grid.Column="1"
                                               SelectionMode="None"
-                                              Margin="0,50">
+                                              Padding="0,0,0,0">
 
                                         <!-- Items Panel -->
                                         <GridView.ItemsPanel>
@@ -151,17 +151,17 @@
                                             </ItemsPanelTemplate>
                                         </GridView.ItemsPanel>
 
-                                        <StackPanel
-                                            MinHeight="180"
-                                            MaxHeight="180"
+                                        <Border Background="#202020" CornerRadius="5" Margin="0,5,0,0">
+                                            <StackPanel
+                                            MaxHeight="175"
                                             Orientation="Vertical">
 
-                                            <Border Background="#202020" CornerRadius="5" Margin="0,5,0,5">
                                                 <GridView
-                                                    Margin="10,10,0,10"
+                                                    Margin="5,5,0,5"
                                                     SelectionMode="Single"
                                                     IsItemClickEnabled="False"
-                                                    SelectionChanged="SelectItemFromSearch">
+                                                    SelectionChanged="SelectItemFromSearch"
+                                                    Padding="0,0,0,0">
 
                                                     <!-- Panel for the individual gridviews for each result-->
                                                     <GridView.ItemsPanel>
@@ -257,7 +257,6 @@
                                                             Source="{x:Bind result.tracks.items[2].album.images[0].url}"
                                                             Height="50"
                                                             Stretch="Fill"
-                                                            VerticalAlignment="Top"
                                                             Grid.Column="0"/>
                                                         </Border>
 
@@ -281,11 +280,9 @@
                                                             </StackPanel>
                                                         </StackPanel>
                                                     </Grid>
-
                                                 </GridView>
-                                            </Border>
-                                        </StackPanel>
-
+                                            </StackPanel>
+                                        </Border>
                                     </GridView>
                                 </Grid>
                             </Border>
