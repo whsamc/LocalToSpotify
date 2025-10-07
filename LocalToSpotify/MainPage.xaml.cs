@@ -62,8 +62,7 @@ namespace LocalToSpotify
 
             Debug.WriteLine("Finished Reading through files and searching in Spotify");
             // Clear the previous search results from the UI
-            GridDisplayView1.Items.Clear();
-            GridDisplayView2.Items.Clear();
+            MainResultsPageUI.Items.Clear();
 
             // Iterate through the search results and display them in the UI
             foreach (var searchResponse in Data.SearchList)
@@ -178,9 +177,9 @@ namespace LocalToSpotify
         {
             try
             {
+                OriginalFileAndResult originalFileAndResult = new OriginalFileAndResult(musicFile, searchResults);
                 // Add an item to the GridViews using the item Template in XAML
-                GridDisplayView1.Items.Add(musicFile);
-                GridDisplayView2.Items.Add(searchResults);
+                MainResultsPageUI.Items.Add(originalFileAndResult);
             }
             catch (Exception ex)
             {
