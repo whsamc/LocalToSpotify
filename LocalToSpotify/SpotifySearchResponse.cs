@@ -12,6 +12,8 @@ namespace LocalToSpotify
     {
         public Tracks tracks { get; set; }
         public int searchIndex { get; set; }
+
+        public int searchOrder { get; set; }
     }
 
     public class Tracks
@@ -45,6 +47,7 @@ namespace LocalToSpotify
         public int track_number { get; set; }
         public string type { get; set; }
         public string uri { get; set; }
+        public int searchResponseIndex { get; set; }
     }
 
     public class Album
