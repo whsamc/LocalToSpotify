@@ -137,6 +137,11 @@ namespace LocalToSpotify
 
                         // Assign the search index to the search results for tracking later
                         searchResults.searchIndex = searchIndex;
+                        foreach(var song in searchResults.tracks.items)
+                        {
+                            song.searchResponseIndex = searchIndex;
+                        }
+                        searchResults.searchOrder = searchIndex + 1;
                         searchIndex++;  // Increment search index for next iteration
 
                         // Add the result ids for each search to a list of strings that get added to broader search list
@@ -257,13 +262,16 @@ namespace LocalToSpotify
         private void SelectItemFromSearch(object sender, SelectionChangedEventArgs e)
         {
             try
-            {
-                // Data.SearchSelection[(e.AddedItems.First() as SpotifySearchResponse).searchIndex] = ;
-                Debug.WriteLine($"Selected ID: ");
+            {                
+                // Get the selected item from the gridview and also the index of which search it is
+                var item = (((e.AddedItems.First() as Grid).DataContext) as Item);
+                var index = item.searchResponseIndex;
+
+                Debug.WriteLine($"Index {index}. Selected ID: {item.id}");
             }
-            catch
+            catch(Exception ex)
             {
-                Debug.WriteLine($"Error upon selecting song");
+                Debug.WriteLine($"Error upon selecting song: {ex.Message}");
             }
         }
 
