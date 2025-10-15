@@ -44,15 +44,48 @@
                 Text=""
                 TextChanged="ReadFileDirectoryPath"/>
 
-                <Button
-                x:Name="ScanBtn"
-                Content="Scan" 
-                Click="FindInSpotify"
-                HorizontalAlignment="Center"
-                MaxWidth="150"
-                FontFamily="Helvetica"
-                FontWeight="Bold"
-                FontSize="24"/>
+                <StackPanel
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center">
+                    
+                    <Button
+                    x:Name="ScanBtn"
+                    Content="Scan" 
+                    Click="FindInSpotify"
+                    HorizontalAlignment="Center"
+                    MaxWidth="150"
+                    FontFamily="Helvetica"
+                    FontWeight="Bold"
+                    FontSize="24"/>
+
+                    <StackPanel
+                        Margin="15">
+                        
+                        <Button
+                            x:Name="CreatePlaylistBtn"
+                            Click="CreateNewPlaylistMethod"
+                            Content="Create New Playlist"
+                            HorizontalAlignment="Center"
+                            Width="160"
+                            FontFamily="Helvetica"
+                            FontWeight="Bold"
+                            FontSize="12"
+                            Margin="0,0,0,10"
+                            IsEnabled="False"/>
+                        
+                        <Button
+                            x:Name="UpdatePlaylistBtn"
+                            Click="UpdateExistingPlaylistMethod"
+                            Content="Update Existing Playlist"
+                            HorizontalAlignment="Center"
+                            Width="160"
+                            FontFamily="Helvetica"
+                            FontWeight="Bold"
+                            FontSize="12"
+                            IsEnabled="False"/>
+                    </StackPanel>
+                </StackPanel>
+
                 <!--#endregion -->
 
                 <!-- Headers -->
