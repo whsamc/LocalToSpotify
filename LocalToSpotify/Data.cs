@@ -24,13 +24,14 @@ namespace LocalToSpotify
 
         private string _spotifyToken = "";
         private string _fileDirectory = "";
-        private List<List<string>> _searchSelection = new List<List<string>>();
+        private List<string> _searchSelection = new List<string>();
         private ObservableCollection<SpotifySearchResponse> _searchList = new ObservableCollection<SpotifySearchResponse>();
 
         private Profile _userProfile = new Profile();
         private SpotifySearchResponse _searchResponse = new SpotifySearchResponse();
+        private PlaylistResponse _playlistResponse = new PlaylistResponse();
 
-        public string SpotifyToken
+        internal string SpotifyToken
         {
             get { return _spotifyToken; }
             set
@@ -40,7 +41,7 @@ namespace LocalToSpotify
             }
         }
 
-        public Profile UserProfile
+        internal Profile UserProfile
         {
             get { return _userProfile; }
             set
@@ -50,7 +51,7 @@ namespace LocalToSpotify
             }
         }
 
-        public string FileDirectory
+        internal string FileDirectory
         {
             get { return _fileDirectory; }
             set
@@ -60,7 +61,7 @@ namespace LocalToSpotify
             }
         }
 
-        public SpotifySearchResponse SearchResponse
+        internal SpotifySearchResponse SearchResponse
         {
             get { return _searchResponse; }
             set
@@ -70,7 +71,17 @@ namespace LocalToSpotify
             }
         }
 
-        public List<List<string>> SearchSelection
+        internal PlaylistResponse UserPlaylists
+        {
+            get { return _playlistResponse; }
+            set
+            {
+                _playlistResponse = value;
+                OnPropertyChanged();
+            }
+        }
+
+        internal List<string> SearchSelection
         {
             get { return _searchSelection; }
             set
@@ -80,7 +91,7 @@ namespace LocalToSpotify
             }
         }
 
-        public ObservableCollection<SpotifySearchResponse> SearchList
+        internal ObservableCollection<SpotifySearchResponse> SearchList
         {
             get { return _searchList; }
             set
