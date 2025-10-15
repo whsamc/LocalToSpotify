@@ -121,6 +121,9 @@ namespace LocalToSpotify
 
         private async void SearchAndDisplay()
         {
+            // Disable the playlist buttons while searching
+            CreatePlaylistBtn.IsEnabled = false;
+            UpdatePlaylistBtn.IsEnabled = false;
             try
             {
                 Search search = new Search();
@@ -149,7 +152,8 @@ namespace LocalToSpotify
                         string result2 = searchResults.tracks.items[1].id;
                         string result3 = searchResults.tracks.items[2].id;
 
-                        Data.SearchSelection.Add(new List<string>() { result1, result2, result3 });
+                        // Adding the first result's ID to the SearchSelection list as default
+                        AddToSearchSelection(result1);
 
                         if (searchResults != null)
                         {
@@ -175,6 +179,10 @@ namespace LocalToSpotify
             {
                 Debug.WriteLine($"Error during search: {ex.Message}");
             }
+
+            // After finishing display
+            CreatePlaylistBtn.IsEnabled = true;
+            UpdatePlaylistBtn.IsEnabled = true;
         }
 
         // Method to display the search results in the UI
@@ -247,6 +255,20 @@ namespace LocalToSpotify
             MusicList.Add(song);
         }
 
+        // Add searched music metadata to List<string> SearchSelection. Contains the selection for each search result (default:first item)
+        private void AddToSearchSelection(string id)
+        {
+            Debug.WriteLine("Adding search result ID to SearchSelection list...");
+            Data.SearchSelection.Add(id);
+        }
+
+        // Change searched music selection when the user selects a different item from the search results
+        private void ChangeSearchSelection(int index, string id)
+        {
+            Data.SearchSelection[index] = id;
+            Debug.WriteLine($"Changed search selection at index {index} to ID: {id}");
+        }
+
         // Switch pages to the Spotify Authentication page
         private void SpotifyAuthPageButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -264,15 +286,32 @@ namespace LocalToSpotify
             try
             {                
                 // Get the selected item from the gridview and also the index of which search it is
+                //  Selected item gets added to AddedItems List as Grid object.
+                //  The DataContext of the grid is set in XAML. Retrieve it as Item
                 var item = (((e.AddedItems.First() as Grid).DataContext) as Item);
                 var index = item.searchResponseIndex;
 
-                Debug.WriteLine($"Index {index}. Selected ID: {item.id}");
+                // Change the selection for that search index to the selected item's ID
+                ChangeSearchSelection(index, item.id);
+                Debug.WriteLine($"Index {index} selection changed to: {item.name} by {item.artists.First()}");
             }
             catch(Exception ex)
             {
                 Debug.WriteLine($"Error upon selecting song: {ex.Message}");
             }
+        }
+
+        private void CreateNewPlaylistMethod(object sender, RoutedEventArgs e)
+        {
+            Search search = new Search();
+
+            search.CreatePlaylist();
+
+        }
+
+        private void UpdateExistingPlaylistMethod(object sender, RoutedEventArgs e)
+        {
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
