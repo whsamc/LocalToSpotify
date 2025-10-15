@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,6 +30,13 @@ using Windows.Foundation.Collections;
 using Windows.Security.Credentials;
 using WinRT.Interop;
 
+/*  TO DO
+ *      Separate Client authorization and logging in to account
+ * 
+ * 
+ * 
+ * 
+ */
 
 namespace LocalToSpotify
 {
@@ -175,15 +183,21 @@ namespace LocalToSpotify
 
                 // Get authorization from spotify with token
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
-                var apiresponse = client.GetFromJsonAsync<Profile>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
 
-                Debug.WriteLine("SpotifyAuth UserProfile: " + apiresponse.display_name);
+                // Getting profile information
+                var apiresponse = client.GetFromJsonAsync<JsonObject>("https://api.spotify.com/v1/me").Result; // GET the user profile from Spotify API
+                Debug.WriteLine("Deserializing JSON response into Profile object...");
+                Profile jsonResponse = JsonConvert.DeserializeObject<Profile>(apiresponse.ToString());
+
+                
+
+                Debug.WriteLine("SpotifyAuth UserProfile: " + jsonResponse.display_name);
 
                 MainPage mainpage = App.mainPage; // Get the current MainPage instance
 
                 // Bind the user profile to the MainPage variable userProfile
-                Data.UserProfile = apiresponse;
-                
+                Data.UserProfile = jsonResponse;
+
                 Debug.WriteLine("Main Page UserProfile: " + Data.UserProfile.display_name);
             }
             catch (Exception ex)

@@ -14,6 +14,7 @@ namespace LocalToSpotify
     internal class Search
     {
         private HttpClient client = new HttpClient();
+        Data Data => Data.Instance;
 
         // Return json response from searching a song through Spotify API
         internal async Task<SpotifySearchResponse> SearchSong(string spotifyToken, MusicInfo info)
@@ -72,8 +73,74 @@ namespace LocalToSpotify
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
-                return null; // or handle the error as needed
+                return null;
             }
+        }
+
+        // Retrieve current user's playlists
+        internal async Task<PlaylistResponse> SearchCurrentUserPlaylist(string spotifyToken)
+        {
+            try
+            {
+                Debug.WriteLine("Building playlist search query...");
+                string url = "https://api.spotify.com/v1/me/playlists?limit=50";
+
+                Debug.WriteLine("Adjusting search query parameters...");
+                // Set the authorization header with your access token
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", spotifyToken);
+
+                try
+                {
+                    // Make the GET request to the Spotify API
+                    var response = await client.GetAsync(url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Debug.WriteLine("Search request successful. Parsing JSON response into object...");
+                        // Parse the JSON response into a json object
+                        var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
+
+                        Debug.WriteLine("Deserializing JSON response into PlaylistResponse object...");
+                        PlaylistResponse playlistSearch = JsonConvert.DeserializeObject<PlaylistResponse>(jsonResponse.ToString());
+
+                        return playlistSearch;
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Error retrieving playlist: {response.StatusCode}");
+                        return null;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"Exception occurred: {ex.Message}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception occurred: {ex.Message}");
+                return null;
+            }
+        }
+
+        internal void CreatePlaylist(string playlistName)
+        {
+            Debug.WriteLine("Creating url for api POST request...");
+            string url = $"https://api.spotify.com/v1/users/{Data.UserProfile.id}/playlists";
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Data.SpotifyToken);
+            client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+            // client.DefaultRequestHeaders.Add("Accept", "application/json");
+            
+            var playlistData = new
+            {
+                name = playlistName,
+                description = "",
+                @public = false
+            };
+            // Serialize the playlist data to JSON
+            var content = new StringContent(JsonConvert.SerializeObject(playlistData), Encoding.UTF8, "application/json");
+            var response = client.PostAsync(url, content).Result;
         }
     }
 }
