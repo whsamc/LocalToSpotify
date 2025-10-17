@@ -141,6 +141,7 @@ namespace LocalToSpotify
             // Serialize the playlist data to JSON
             var content = new StringContent(JsonConvert.SerializeObject(playlistData), Encoding.UTF8, "application/json");
             var response = client.PostAsync(url, content).Result;
+            Debug.WriteLine($"Playlist POST request result: {response.StatusCode}");
         }
     }
 }
