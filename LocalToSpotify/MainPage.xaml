@@ -21,71 +21,87 @@
                 <Image Source="settings_cog.png"/>
 
                 <Button
-                x:Name="SpotifyAuthPageButton"
-                Content="Authenticate"
-                Click="SpotifyAuthPageButton_Clicked"
-                HorizontalAlignment="Right"
-                Background="Transparent"
-                MaxHeight="50"/>
+                    x:Name="SpotifyAuthPageButton"
+                    Content="Authenticate"
+                    Click="SpotifyAuthPageButton_Clicked"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    MaxHeight="50"/>
 
                 <TextBlock
-                Text="Local to Spotify App"/>
+                    Text="Local to Spotify App"/>
 
                 <TextBlock 
-                Name="displayNameTextBlock"
-                Text="{x:Bind Data.UserProfile.display_name}"
-                FontWeight="Bold"
-                Margin="50,0"/>
+                    Name="displayNameTextBlock"
+                    Text="{x:Bind Data.UserProfile.display_name}"
+                    FontWeight="Bold"
+                    Margin="50,0"/>
 
                 <TextBox
-                x:Name="musicFileInput"
-                MaxWidth="750"
-                PlaceholderText="e.g. C:\Users\name\folder"
-                Text=""
-                TextChanged="ReadFileDirectoryPath"/>
+                    x:Name="musicFileInput"
+                    MaxWidth="750"
+                    PlaceholderText="e.g. C:\Users\name\folder"
+                    Text=""
+                    TextChanged="ReadFileDirectoryPath"/>
 
-                <StackPanel
-                    Orientation="Vertical"
-                    HorizontalAlignment="Center">
-                    
-                    <Button
-                    x:Name="ScanBtn"
-                    Content="Scan" 
-                    Click="FindInSpotify"
-                    HorizontalAlignment="Center"
-                    MaxWidth="150"
-                    FontFamily="Helvetica"
-                    FontWeight="Bold"
-                    FontSize="24"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
 
                     <StackPanel
-                        Margin="15">
-                        
-                        <Button
-                            x:Name="CreatePlaylistBtn"
-                            Click="CreateNewPlaylistMethod"
-                            Content="Create New Playlist"
-                            HorizontalAlignment="Center"
-                            Width="160"
-                            FontFamily="Helvetica"
-                            FontWeight="Bold"
-                            FontSize="12"
-                            Margin="0,0,0,10"
-                            IsEnabled="False"/>
-                        
-                        <Button
-                            x:Name="UpdatePlaylistBtn"
-                            Click="UpdateExistingPlaylistMethod"
-                            Content="Update Existing Playlist"
-                            HorizontalAlignment="Center"
-                            Width="160"
-                            FontFamily="Helvetica"
-                            FontWeight="Bold"
-                            FontSize="12"
-                            IsEnabled="False"/>
-                    </StackPanel>
-                </StackPanel>
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Grid.Column="1">
 
+                        <Button
+                            x:Name="ScanBtn"
+                            Content="Scan" 
+                            Click="FindInSpotify"
+                            HorizontalAlignment="Center"
+                            MaxWidth="150"
+                            FontFamily="Helvetica"
+                            FontWeight="Bold"
+                            FontSize="24"/>
+
+                        <StackPanel
+                            Margin="15">
+
+                            <Button
+                                x:Name="CreatePlaylistBtn"
+                                Click="CreateNewPlaylistMethod"
+                                Content="New Playlist"
+                                HorizontalAlignment="Center"
+                                Width="160"
+                                FontFamily="Helvetica"
+                                FontWeight="Bold"
+                                FontSize="12"
+                                Margin="0,0,0,10"
+                                IsEnabled="False"/>
+
+                            <Button
+                                x:Name="UpdatePlaylistBtn"
+                                
+                                Content="Update From Account"
+                                HorizontalAlignment="Center"
+                                Width="160"
+                                FontFamily="Helvetica"
+                                FontWeight="Bold"
+                                FontSize="12"
+                                IsEnabled="False"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel
+                        x:Name="PlaylistStackPanel"
+                        Grid.Column="2"
+                        Orientation="Vertical">
+                        
+                    </StackPanel>
+                </Grid>
                 <!--#endregion -->
 
                 <!-- Headers -->

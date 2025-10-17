@@ -1,3 +1,5 @@
+using ABI.Microsoft.UI.Xaml;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,22 +13,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TagLib;
-using Windows.ApplicationModel.UserDataTasks.DataProvider;
 using Windows.Storage.Streams;
+using Windows.System.Profile;
+using Windows.UI;
+using Color = Windows.UI.Color;
+using CornerRadius = Microsoft.UI.Xaml.CornerRadius;
+using RoutedEventArgs = Microsoft.UI.Xaml.RoutedEventArgs;
+using Thickness = Microsoft.UI.Xaml.Thickness;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace LocalToSpotify
 {
     public sealed partial class MainPage : Page
     {
         string? FileDirectory;
+        private string? playlistName;
         MainPage Current;
         public string DisplayName { get; set; }
         Data Data => Data.Instance;
@@ -305,13 +312,53 @@ namespace LocalToSpotify
         {
             Search search = new Search();
 
-            search.CreatePlaylist();
+            ShowCreatePlaylistFunctionUI();
+            // search.CreatePlaylist();
 
         }
 
-        private void UpdateExistingPlaylistMethod(object sender, RoutedEventArgs e)
+        private void ShowCreatePlaylistFunctionUI()
         {
+            Border border = new Border();
+            border.CornerRadius = new CornerRadius(5);
+            border.BorderBrush = new SolidColorBrush(Color.FromArgb(255,255,255,255));
+            border.BorderThickness = new Thickness(1);
+            border.Width = 250;
+            border.HorizontalAlignment = HorizontalAlignment.Left;
+            border.Padding = new Thickness(10, 10, 10, 10);
 
+            StackPanel playlistHousing = new StackPanel();
+
+            // Create a textbox for the user to input a name. Adjust parameters
+            Microsoft.UI.Xaml.Controls.TextBox playlistNameBox = new Microsoft.UI.Xaml.Controls.TextBox();
+            playlistNameBox.PlaceholderText = "Name of Playlist";
+            playlistNameBox.TextChanged += PlaylistNameBox_TextChanged;
+            playlistNameBox.Width = 250;
+            playlistNameBox.HorizontalAlignment = HorizontalAlignment.Left;
+
+            // Create a button to send POST request to create playlist with items
+            Button sendPOSTrequestBtn = new Button();
+            sendPOSTrequestBtn.Content = "Create Playlist";
+            sendPOSTrequestBtn.Width = 110;
+            sendPOSTrequestBtn.FontSize = 12;
+            sendPOSTrequestBtn.FontWeight = FontWeights.Bold;
+            sendPOSTrequestBtn.Margin = new Thickness(0, 10, 0, 0);
+            sendPOSTrequestBtn.HorizontalAlignment = HorizontalAlignment.Center;
+
+            // Add elements to new stackpanel and border
+            border.Child = playlistHousing;
+            playlistHousing.Children.Add(playlistNameBox);
+            playlistHousing.Children.Add(sendPOSTrequestBtn);
+
+            // Clear any existing UI elements and then add textbox and button
+            PlaylistStackPanel.Children.Clear();
+            PlaylistStackPanel.Children.Add(border);
+        }
+
+        private void PlaylistNameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // change field playlistName to user's input in textbox.
+            playlistName = (sender as Microsoft.UI.Xaml.Controls.TextBox).Text;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
