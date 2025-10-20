@@ -101,6 +101,26 @@
                         Orientation="Vertical">
                         
                     </StackPanel>
+
+                    <StackPanel
+                        x:Name="PlaylistResultPanel"
+                        Grid.Column="2"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom">
+                        <InfoBar
+                            x:Name="SuccessPlaylistCreationInfoBar"
+                            Title="Success"
+                            Message="Playlist successfully created"
+                            Severity="Success"
+                            IsOpen="False"/>
+                        <InfoBar
+                            x:Name="InvalidPlaylistNameInfoBar"
+                            Title="Error"
+                            Message="Invalid playlist name. Please input a valid name."
+                            Severity="Error"
+                            IsOpen="False"/>
+
+                    </StackPanel>
                 </Grid>
                 <!--#endregion -->
 
