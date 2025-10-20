@@ -24,12 +24,13 @@ namespace LocalToSpotify
 
         private string _spotifyToken = "";
         private string _fileDirectory = "";
+        private string _playlistName = "";
         private List<string> _searchSelection = new List<string>();
         private ObservableCollection<SpotifySearchResponse> _searchList = new ObservableCollection<SpotifySearchResponse>();
 
         private Profile _userProfile = new Profile();
         private SpotifySearchResponse _searchResponse = new SpotifySearchResponse();
-        private PlaylistResponse _playlistResponse = new PlaylistResponse();
+        private PlaylistSearchResponse _playlistResponse = new PlaylistSearchResponse();
 
         internal string SpotifyToken
         {
@@ -61,6 +62,16 @@ namespace LocalToSpotify
             }
         }
 
+        internal string PlaylistName
+        {
+            get { return _playlistName; }
+            set
+            {
+                _playlistName = value;
+                OnPropertyChanged();
+            }
+        }
+
         internal SpotifySearchResponse SearchResponse
         {
             get { return _searchResponse; }
@@ -71,7 +82,7 @@ namespace LocalToSpotify
             }
         }
 
-        internal PlaylistResponse UserPlaylists
+        internal PlaylistSearchResponse UserPlaylists
         {
             get { return _playlistResponse; }
             set
