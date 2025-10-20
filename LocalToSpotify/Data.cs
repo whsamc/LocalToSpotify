@@ -92,6 +92,7 @@ namespace LocalToSpotify
             }
         }
 
+        // List of spotify tracks to add to playlist
         internal List<string> SearchSelection
         {
             get { return _searchSelection; }
