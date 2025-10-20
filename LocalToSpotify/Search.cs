@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Diagnostics;
+using System.Text;
 using System.Text.Json.Nodes;
-using Newtonsoft.Json;
+using System.Text.Unicode;
+using System.Threading.Tasks;
 
 namespace LocalToSpotify
 {
@@ -78,7 +81,7 @@ namespace LocalToSpotify
         }
 
         // Retrieve current user's playlists
-        internal async Task<PlaylistResponse> SearchCurrentUserPlaylist(string spotifyToken)
+        internal async Task<PlaylistSearchResponse> SearchCurrentUserPlaylist(string spotifyToken)
         {
             try
             {
@@ -101,7 +104,7 @@ namespace LocalToSpotify
                         var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
 
                         Debug.WriteLine("Deserializing JSON response into PlaylistResponse object...");
-                        PlaylistResponse playlistSearch = JsonConvert.DeserializeObject<PlaylistResponse>(jsonResponse.ToString());
+                        PlaylistSearchResponse playlistSearch = JsonConvert.DeserializeObject<PlaylistSearchResponse>(jsonResponse.ToString());
 
                         return playlistSearch;
                     }
@@ -124,24 +127,54 @@ namespace LocalToSpotify
             }
         }
 
-        internal void CreatePlaylist(string playlistName)
+        internal bool CreatePlaylist()
         {
-            Debug.WriteLine("Creating url for api POST request...");
-            string url = $"https://api.spotify.com/v1/users/{Data.UserProfile.id}/playlists";
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Data.SpotifyToken);
-            client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-            // client.DefaultRequestHeaders.Add("Accept", "application/json");
-            
-            var playlistData = new
+            if(Data.PlaylistName == null || Data.PlaylistName == "")
             {
-                name = playlistName,
-                description = "",
-                @public = false
-            };
-            // Serialize the playlist data to JSON
-            var content = new StringContent(JsonConvert.SerializeObject(playlistData), Encoding.UTF8, "application/json");
-            var response = client.PostAsync(url, content).Result;
-            Debug.WriteLine($"Playlist POST request result: {response.StatusCode}");
+                Debug.WriteLine("Playlist Name is empty");
+                return false;
+            }
+            else
+            {
+                Debug.WriteLine("Creating url for api POST request...");
+                string url = $"https://api.spotify.com/v1/users/{Data.UserProfile.id}/playlists";
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Data.SpotifyToken);
+                var headers = client.DefaultRequestHeaders;
+
+                if (!headers.UserAgent.TryParseAdd("Content-Type"))
+                {
+                    throw new Exception("Invalid header value: Content-Type");
+                }
+
+                var playlistData = new
+                {
+                    name = Data.PlaylistName,
+                    description = "",
+                    @public = false
+                };
+                // Serialize the playlist data to JSON
+                var jsonString = JsonConvert.SerializeObject(playlistData);
+                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                var response = client.PostAsync(url, content);
+
+                // Converting response into json object
+                var jsonResponse = response.Result.Content.ReadFromJsonAsync<JsonObject>();
+                Playlist newPlaylist = JsonConvert.DeserializeObject<Playlist>(jsonResponse.ToString());
+                
+                Debug.WriteLine($"Playlist POST request result: {response.Result.StatusCode}");
+                Debug.WriteLine($"Playlist ID: {newPlaylist.id}");
+
+                if(response.Result.IsSuccessStatusCode)
+                {
+                    AddItemsToPlaylist(newPlaylist.id);
+                }
+                return true;
+            }
+        }
+
+        internal void AddItemsToPlaylist(string playlistID)
+        {
+
         }
     }
 }
