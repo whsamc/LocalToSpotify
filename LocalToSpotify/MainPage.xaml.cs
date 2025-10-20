@@ -25,6 +25,7 @@ using Windows.UI;
 using Color = Windows.UI.Color;
 using CornerRadius = Microsoft.UI.Xaml.CornerRadius;
 using RoutedEventArgs = Microsoft.UI.Xaml.RoutedEventArgs;
+using RoutedEventHandler = Microsoft.UI.Xaml.RoutedEventHandler;
 using Thickness = Microsoft.UI.Xaml.Thickness;
 
 
@@ -65,20 +66,12 @@ namespace LocalToSpotify
         private void FindInSpotify(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("FindInSpotify called");
-            ReadThroughFiles();
+            ScanBtn.IsEnabled = false;  // Disable scan button while scanning
 
-            Debug.WriteLine("Finished Reading through files and searching in Spotify");
             // Clear the previous search results from the UI
             MainResultsPageUI.Items.Clear();
-
-            // Iterate through the search results and display them in the UI
-            foreach (var searchResponse in Data.SearchList)
-            {
-                Debug.WriteLine("Attempting to add UI for search result");
-                string title = searchResponse.tracks.items[0].name;
-                string artist = searchResponse.tracks.items[0].artists[0].name;
-                string album = searchResponse.tracks.items[0].album.name;
-            }
+            PlaylistStackPanel.Children.Clear();
+            ReadThroughFiles();
         }
 
         // Get the music file paths for the folder
@@ -190,6 +183,7 @@ namespace LocalToSpotify
             // After finishing display
             CreatePlaylistBtn.IsEnabled = true;
             UpdatePlaylistBtn.IsEnabled = true;
+            ScanBtn.IsEnabled = true;
         }
 
         // Method to display the search results in the UI
@@ -319,6 +313,8 @@ namespace LocalToSpotify
 
         private void ShowCreatePlaylistFunctionUI()
         {
+            Search search = new Search();
+
             Border border = new Border();
             border.CornerRadius = new CornerRadius(5);
             border.BorderBrush = new SolidColorBrush(Color.FromArgb(255,255,255,255));
@@ -339,6 +335,7 @@ namespace LocalToSpotify
             // Create a button to send POST request to create playlist with items
             Button sendPOSTrequestBtn = new Button();
             sendPOSTrequestBtn.Content = "Create Playlist";
+            sendPOSTrequestBtn.Click += CreatePlaylistButton_Click;
             sendPOSTrequestBtn.Width = 110;
             sendPOSTrequestBtn.FontSize = 12;
             sendPOSTrequestBtn.FontWeight = FontWeights.Bold;
@@ -350,7 +347,7 @@ namespace LocalToSpotify
             playlistHousing.Children.Add(playlistNameBox);
             playlistHousing.Children.Add(sendPOSTrequestBtn);
 
-            // Clear any existing UI elements and then add textbox and button
+            // Clear any existing UI elements and then add border element housing the stackpanel and button
             PlaylistStackPanel.Children.Clear();
             PlaylistStackPanel.Children.Add(border);
         }
@@ -358,7 +355,24 @@ namespace LocalToSpotify
         private void PlaylistNameBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // change field playlistName to user's input in textbox.
-            playlistName = (sender as Microsoft.UI.Xaml.Controls.TextBox).Text;
+            Data.PlaylistName = (sender as Microsoft.UI.Xaml.Controls.TextBox).Text;
+        }
+        internal void CreatePlaylistButton_Click(object sender, RoutedEventArgs e)
+        {
+            InvalidPlaylistNameInfoBar.IsOpen = false;
+            SuccessPlaylistCreationInfoBar.IsOpen = false;
+
+            Search search = new Search();
+            if (search.CreatePlaylist())
+            {
+                Debug.WriteLine("Playlist created successfully.");
+                SuccessPlaylistCreationInfoBar.IsOpen = true;
+            }
+            else
+            {
+                Debug.WriteLine("Failed to create playlist.");
+                InvalidPlaylistNameInfoBar.IsOpen = true;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
