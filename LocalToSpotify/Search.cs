@@ -155,6 +155,7 @@ namespace LocalToSpotify
                 // Serialize the playlist data to JSON
                 var jsonString = JsonConvert.SerializeObject(playlistData);
                 var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                // POST request to create playlist
                 var response = client.PostAsync(url, content);
 
                 // Converting response into json object
@@ -174,7 +175,38 @@ namespace LocalToSpotify
 
         internal void AddItemsToPlaylist(string playlistID)
         {
+            string url = $"https://api.spotify.com/v1/playlists/{playlistID}/tracks";
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Data.SpotifyToken);
+            var headers = client.DefaultRequestHeaders;
 
+            if (!headers.UserAgent.TryParseAdd("Content-Type"))
+            {
+                throw new Exception("Invalid header value: Content-Type");
+            }
+
+            // Create array of track URI strings to add to playlist
+            string[] stringArray = new string[Data.SearchSelection.Count];
+            stringArray = Data.SearchSelection.ToArray();
+
+            var playlistItems = new
+            {
+                uris = stringArray
+            };
+
+            // Serialize the playlist data to JSON
+            var jsonString = JsonConvert.SerializeObject(playlistItems);
+            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            // POST request to add items to playlist
+            var response = client.PostAsync(url, content);
+
+            if (response.Result.IsSuccessStatusCode)
+            {
+                Debug.WriteLine("Successfully added items to playlist");
+            }
+            else
+            {
+                Debug.WriteLine("Failed adding items to playlist");
+            }
         }
     }
 }
