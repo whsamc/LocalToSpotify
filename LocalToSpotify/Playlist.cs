@@ -47,10 +47,6 @@ namespace LocalToSpotify
         public Track track { get; set; }
     }
 
-    public class LinkedFrom
-    {
-    }
-
     public class PlaylistOwner
     {
         public ExternalUrls external_urls { get; set; }
@@ -79,7 +75,6 @@ namespace LocalToSpotify
         public string href { get; set; }
         public string id { get; set; }
         public bool is_playable { get; set; }
-        public LinkedFrom linked_from { get; set; }
         public Restrictions restrictions { get; set; }
         public string name { get; set; }
         public int popularity { get; set; }
