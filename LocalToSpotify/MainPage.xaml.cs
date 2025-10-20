@@ -147,12 +147,12 @@ namespace LocalToSpotify
                         searchResults.searchOrder = searchIndex + 1;
                         searchIndex++;  // Increment search index for next iteration
 
-                        // Add the result ids for each search to a list of strings that get added to broader search list
-                        string result1 = searchResults.tracks.items[0].id;
-                        string result2 = searchResults.tracks.items[1].id;
-                        string result3 = searchResults.tracks.items[2].id;
+                        // Add the result uri for each search to a list of strings that get added to broader search list
+                        string result1 = searchResults.tracks.items[0].uri;
+                        string result2 = searchResults.tracks.items[1].uri;
+                        string result3 = searchResults.tracks.items[2].uri;
 
-                        // Adding the first result's ID to the SearchSelection list as default
+                        // Adding the first result's uri to the SearchSelection list as default
                         AddToSearchSelection(result1);
 
                         if (searchResults != null)
@@ -257,17 +257,17 @@ namespace LocalToSpotify
         }
 
         // Add searched music metadata to List<string> SearchSelection. Contains the selection for each search result (default:first item)
-        private void AddToSearchSelection(string id)
+        private void AddToSearchSelection(string uri)
         {
-            Debug.WriteLine("Adding search result ID to SearchSelection list...");
-            Data.SearchSelection.Add(id);
+            Debug.WriteLine("Adding search result uri to SearchSelection list...");
+            Data.SearchSelection.Add(uri);
         }
 
         // Change searched music selection when the user selects a different item from the search results
-        private void ChangeSearchSelection(int index, string id)
+        private void ChangeSearchSelection(int index, string uri)
         {
-            Data.SearchSelection[index] = id;
-            Debug.WriteLine($"Changed search selection at index {index} to ID: {id}");
+            Data.SearchSelection[index] = uri;
+            Debug.WriteLine($"Changed search selection at index {index} to uri: {uri}");
         }
 
         // Switch pages to the Spotify Authentication page
@@ -293,8 +293,8 @@ namespace LocalToSpotify
                 var index = item.searchResponseIndex;
 
                 // Change the selection for that search index to the selected item's ID
-                ChangeSearchSelection(index, item.id);
-                Debug.WriteLine($"Index {index} selection changed to: {item.name} by {item.artists.First()}");
+                ChangeSearchSelection(index, item.uri);
+                Debug.WriteLine($"Index {index} selection changed to: {item.name} by {item.artists.First().name}");
             }
             catch(Exception ex)
             {
