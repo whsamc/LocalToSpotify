@@ -78,11 +78,6 @@ namespace LocalToSpotify
         public string uri { get; set; }
     }
 
-    public class ExternalIds
-    {
-        public string isrc { get; set; }
-    }
-
     public class ExternalUrls
     {
         public string spotify { get; set; }
