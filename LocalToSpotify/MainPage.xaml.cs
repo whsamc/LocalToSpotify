@@ -357,13 +357,13 @@ namespace LocalToSpotify
             // change field playlistName to user's input in textbox.
             Data.PlaylistName = (sender as Microsoft.UI.Xaml.Controls.TextBox).Text;
         }
-        internal void CreatePlaylistButton_Click(object sender, RoutedEventArgs e)
+        internal async void CreatePlaylistButton_Click(object sender, RoutedEventArgs e)
         {
             InvalidPlaylistNameInfoBar.IsOpen = false;
             SuccessPlaylistCreationInfoBar.IsOpen = false;
 
             Search search = new Search();
-            if (search.CreatePlaylist())
+            if (await search.CreatePlaylist())
             {
                 Debug.WriteLine("Playlist created successfully.");
                 SuccessPlaylistCreationInfoBar.IsOpen = true;
