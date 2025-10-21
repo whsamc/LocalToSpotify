@@ -22,20 +22,20 @@ namespace LocalToSpotify
 
         public MusicInfo(string title, string artist, string album, string filepath, ImageSource musicCover)
         {
-            this.Title = title;
-            this.Artist = artist;
-            this.Album = album;
-            this.Filepath = filepath;
-            this.MusicCover = musicCover;
+            Title = title;
+            Artist = artist;
+            Album = album;
+            Filepath = filepath;
+            MusicCover = musicCover;
 
             ConvertMetadataToQueryable();
         }
 
         internal void ConvertMetadataToQueryable()
         {
-            this.QueryTitle = Title.Replace(' ', '+');
-            this.QueryArtist = Artist.Replace(' ', '+');
-            this.QueryAlbum = Album.Replace(' ', '+');
+            QueryTitle = Title.Replace(' ', '+');
+            QueryArtist = Artist.Replace(' ', '+');
+            QueryAlbum = Album.Replace(' ', '+');
         }
     }
 

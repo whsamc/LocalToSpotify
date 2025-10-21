@@ -127,7 +127,7 @@ namespace LocalToSpotify
             }
         }
 
-        internal bool CreatePlaylist()
+        internal async Task<bool> CreatePlaylist()
         {
             if(Data.PlaylistName == null || Data.PlaylistName == "")
             {
@@ -156,16 +156,16 @@ namespace LocalToSpotify
                 var jsonString = JsonConvert.SerializeObject(playlistData);
                 var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 // POST request to create playlist
-                var response = client.PostAsync(url, content);
+                var response = await client.PostAsync(url, content);
 
                 // Converting response into json object
-                var jsonResponse = response.Result.Content.ReadFromJsonAsync<JsonObject>();
+                var jsonResponse = await response.Content.ReadFromJsonAsync<JsonObject>();
                 Playlist newPlaylist = JsonConvert.DeserializeObject<Playlist>(jsonResponse.ToString());
                 
-                Debug.WriteLine($"Playlist POST request result: {response.Result.StatusCode}");
+                Debug.WriteLine($"Playlist POST request result: {response.StatusCode}");
                 Debug.WriteLine($"Playlist ID: {newPlaylist.id}");
 
-                if(response.Result.IsSuccessStatusCode)
+                if(response.IsSuccessStatusCode)
                 {
                     AddItemsToPlaylist(newPlaylist.id);
                 }

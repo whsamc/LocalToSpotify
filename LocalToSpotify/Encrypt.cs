@@ -14,12 +14,18 @@ using Buffer = Windows.Storage.Streams.Buffer;
 
 namespace LocalToSpotify
 {
+    /*  Separate encrypted files for client ID/Secret and token
+     * 
+     * 
+     * 
+     */
     internal class Encrypt
     {
         private string securityDescriptor = "LOCAL=user"; // Security descriptor for the DataProtectionProvider
         // private string configFilePath = @"\Config.dat";
-        // public static string configFilePath = @"E:\Source\Stuff\Config.dat";
-        public static string configFilePath = @"C:\Users\Sam\Documents\LocalToSpotify\Config.dat";
+        public static string configFilePath = @"E:\Source\Stuff\Config.dat";
+        // public static string configFilePath = @"C:\Users\Sam\Documents\LocalToSpotify\Config.dat";
+
 
         internal async Task EncryptStringToFile(string plainText)
         {
