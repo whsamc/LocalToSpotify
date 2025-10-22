@@ -8,6 +8,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <!--
+    
+        Implement skip function for songs that user does not want to add to playlist.
+        
+    
+    
+    
+    -->
+
     <Grid
         Name="MainPageGrid"
         DataContext="{x:Bind Path=Current}">
